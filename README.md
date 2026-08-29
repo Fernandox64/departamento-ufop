@@ -60,6 +60,34 @@ ambiente.
   secretaria e as imagens enviadas. Sem esse volume, tudo volta ao padrao a cada rebuild/deploy.
 - Configure `APP_URL` com o dominio final e `APP_DEBUG=false` em producao.
 
+## Seguranca
+
+Medidas ja implementadas no codigo:
+
+- **Sem banco de dados** — elimina SQL injection por completo, e todo conteudo do admin passa
+  pelo escape automatico do Blade (`{{ }}`), sem renderizar HTML — elimina a maior parte dos
+  vetores de XSS armazenado.
+- **Limite de tentativas de login**: 5 por minuto, por combinacao de e-mail + IP
+  (`app/Providers/AppServiceProvider.php`, limiter `login`).
+- **Log de auditoria** em `storage/logs/admin-*.log`: login (sucesso/falha) e toda acao que
+  muda conteudo (POST/PUT/DELETE dentro do `/admin`), com rota, IP e horario.
+- **Cabecalhos de seguranca HTTP** (`app/Http/Middleware/SecurityHeaders.php`):
+  `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` e uma
+  `Content-Security-Policy` restritiva (nao usamos nenhum CDN externo).
+- **Uploads**: extensao do arquivo salvo e detectada pelo conteudo real (nao pelo nome que o
+  navegador envia), e o Apache recusa (403) qualquer tentativa de executar PHP a partir de
+  `/storage/*` — mesmo que um arquivo malicioso passasse pela validacao de upload, ele nunca
+  seria executado como script.
+- **HTTPS opcional**: `FORCE_HTTPS=true` no `.env` redireciona tudo para HTTPS. Fica desligado
+  por padrao — so ative depois de confirmar que o dominio final tem certificado configurado,
+  senao o site fica inacessivel (loop de redirecionamento).
+
+Fora do codigo (vale considerar ao publicar de verdade):
+- Trocar a senha padrao do admin (`Trocar@123`) antes de ir ao ar.
+- Configurar backup regular de `storage/content/` e `storage/uploads/` (sao os unicos dados do
+  site — sem banco, sem eles nao ha como recuperar o conteudo).
+- Manter o Laravel e as dependencias do `composer.json` atualizados.
+
 ## Tema
 
 O HTML/CSS original (tema "Neoton") esta em `../neoton-html-full-package/` como referencia.

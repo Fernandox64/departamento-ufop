@@ -24,10 +24,10 @@ Route::get('/eventos', [EventoController::class, 'index'])->name('eventos.index'
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt')->middleware('throttle:login');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::middleware('admin.auth')->group(function () {
+    Route::middleware(['admin.auth', 'admin.audit'])->group(function () {
         Route::get('/', [AdminContentController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/configuracoes', [AdminContentController::class, 'configuracoesEdit'])->name('configuracoes.edit');

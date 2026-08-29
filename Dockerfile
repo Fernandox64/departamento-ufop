@@ -26,6 +26,12 @@ RUN { \
       echo '        AllowOverride All'; \
       echo '        Require all granted'; \
       echo '    </Directory>'; \
+      echo '    # Imagens/anexos enviados pelo painel admin ficam em /storage/uploads.'; \
+      echo '    # Nunca deve ser possivel executar PHP vindo dali, mesmo se algum'; \
+      echo '    # arquivo malicioso passar pela validacao de upload (defesa em profundidade).'; \
+      echo '    <LocationMatch "^/storage/.*\.(php[0-9]?|phtml|pht|phar)$">'; \
+      echo '        Require all denied'; \
+      echo '    </LocationMatch>'; \
       echo '</VirtualHost>'; \
     } > /etc/apache2/sites-available/000-default.conf
 

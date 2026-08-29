@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -33,6 +34,11 @@ class AuthController extends Controller
             && Hash::check($credentials['password'], $adminHash);
 
         if (! $valid) {
+            Log::channel('admin')->warning('login_falhou', [
+                'email_tentado' => $credentials['email'],
+                'ip' => $request->ip(),
+            ]);
+
             return back()
                 ->withErrors(['email' => 'E-mail ou senha invalidos.'])
                 ->onlyInput('email');
@@ -45,11 +51,21 @@ class AuthController extends Controller
             Cookie::queue('admin_remember', hash('sha256', $adminHash), 60 * 24 * 30);
         }
 
+        Log::channel('admin')->info('login_sucesso', [
+            'admin' => $adminEmail,
+            'ip' => $request->ip(),
+        ]);
+
         return redirect()->route('admin.dashboard');
     }
 
     public function logout(Request $request)
     {
+        Log::channel('admin')->info('logout', [
+            'admin' => config('admin.email'),
+            'ip' => $request->ip(),
+        ]);
+
         $request->session()->forget('admin_logged_in');
         $request->session()->regenerate();
         Cookie::queue(Cookie::forget('admin_remember'));

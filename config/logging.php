@@ -65,6 +65,16 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // Registro de acoes do painel admin (login, criacao/edicao/exclusao de
+        // conteudo). Fica separado do log de erros para facilitar auditoria.
+        'admin' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/admin.log'),
+            'level' => 'info',
+            'days' => 90,
+            'replace_placeholders' => true,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

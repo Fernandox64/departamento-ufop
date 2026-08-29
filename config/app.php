@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Ligue no .env (FORCE_HTTPS=true) somente depois de confirmar que o
+    // dominio final tem certificado HTTPS configurado.
+    'force_https' => env('FORCE_HTTPS', false),
+
 ];

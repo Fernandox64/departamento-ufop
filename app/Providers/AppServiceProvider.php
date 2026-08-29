@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Support\ContentDefaults;
 use App\Support\ContentStore;
 use App\Support\EventoStore;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +26,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Login do admin: no maximo 5 tentativas por minuto, contando por
+        // e-mail tentado + IP (bloqueia forca bruta sem travar todo mundo se
+        // um IP compartilhado tiver outro uso legitimo).
+        RateLimiter::for('login', function (Request $request) {
+            $chave = strtolower((string) $request->input('email')).'|'.$request->ip();
+
+            return Limit::perMinute(5)->by($chave);
+        });
+
         View::composer('*', function ($view) {
             $view->with('siteSettings', ContentStore::get('configuracoes', ContentDefaults::configuracoes()));
             $view->with('rodape', ContentStore::get('rodape', ContentDefaults::rodape()));

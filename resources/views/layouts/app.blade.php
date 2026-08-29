@@ -59,6 +59,14 @@
     <script src="{{ asset('assets/js/plugins.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <script>
+        // O tema (main.js) so esconde a tela de carregamento no evento "load" (espera
+        // TODAS as imagens/fontes baixarem) e ainda soma ~2s de atraso proposital
+        // depois disso. Aqui escondemos assim que o HTML estiver pronto, sem esperar
+        // isso — o navegador so precisa terminar de interpretar a pagina.
+        $(function () {
+            $('#back__preloader').stop(true, true).fadeOut(150);
+        });
+
         (function () {
             var btn = document.getElementById('backToTop');
             var ring = btn.querySelector('.back-to-top-ring-fill');

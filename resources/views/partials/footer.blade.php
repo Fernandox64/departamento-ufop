@@ -18,17 +18,43 @@
                         </ul>
                     </div>
                 </div>
+                @php
+                    // Mesma lista e mesmas condicoes do menu principal (partials/header.blade.php).
+                    $linksRapidos = [
+                        ['label' => 'Inicio', 'url' => route('home')],
+                        ['label' => 'O Departamento', 'url' => route('sobre')],
+                    ];
+                    if (!empty($menuGraduacao['mostrar_menu'])) {
+                        $linksRapidos[] = ['label' => 'Graduacao', 'url' => route('graduacao')];
+                    }
+                    if (!empty($menuPosGraduacao['mostrar_menu'])) {
+                        $linksRapidos[] = ['label' => 'Pos-Graduacao', 'url' => route('pos-graduacao')];
+                    }
+                    $linksRapidos[] = ['label' => 'Servicos', 'url' => route('servicos')];
+                    $linksRapidos[] = ['label' => 'Noticias', 'url' => route('noticias.index')];
+                    if (!empty($menuEventosVisivel)) {
+                        $linksRapidos[] = ['label' => 'Eventos', 'url' => route('eventos.index')];
+                    }
+                    $linksRapidos[] = ['label' => 'Equipe', 'url' => route('equipe')];
+                    $linksRapidos[] = ['label' => 'Contato', 'url' => route('contato')];
+
+                    $colunasLinks = count($linksRapidos) > 5
+                        ? array_chunk($linksRapidos, (int) ceil(count($linksRapidos) / 2))
+                        : [$linksRapidos];
+                @endphp
                 <div class="col-lg-4 md-mb-30">
                     <div class="footer-widget footer-widget-2">
                         <h3 class="footer-title">Links rapidos</h3>
-                        <div class="footer-menu">
-                            <ul>
-                                <li><a href="{{ route('home') }}">Inicio</a></li>
-                                <li><a href="{{ route('sobre') }}">O Departamento</a></li>
-                                <li><a href="{{ route('servicos') }}">Servicos</a></li>
-                                <li><a href="{{ route('equipe') }}">Equipe</a></li>
-                                <li><a href="{{ route('contato') }}">Contato</a></li>
-                            </ul>
+                        <div class="d-flex gap-4 flex-wrap">
+                            @foreach($colunasLinks as $coluna)
+                                <div class="footer-menu">
+                                    <ul>
+                                        @foreach($coluna as $link)
+                                            <li><a href="{{ $link['url'] }}">{{ $link['label'] }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

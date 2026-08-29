@@ -1,0 +1,313 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\renewcommand{\contentsname}{Sumário}
+
+\definecolor{brandwine}{HTML}{962038}
+\definecolor{brandcharcoal}{HTML}{2B2B2B}
+\definecolor{dicabg}{HTML}{FCF4F5}
+\definecolor{avisobg}{HTML}{FFF7E6}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=brandwine,
+    urlcolor=brandwine,
+    pdftitle={Manual do Usuário - Painel Administrativo},
+    pdfauthor={Departamento Modelo}
+}
+
+\titleformat{\section}{\Large\bfseries\color{brandwine}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{brandcharcoal}}{\thesubsection}{1em}{}
+
+\newtcolorbox{dica}{colback=dicabg,colframe=brandwine,boxrule=0.8pt,arc=2pt,left=8pt,right=8pt,top=5pt,bottom=5pt,breakable,title={\textbf{Dica}}}
+\newtcolorbox{aviso}{colback=avisobg,colframe=orange!70!black,boxrule=0.8pt,arc=2pt,left=8pt,right=8pt,top=5pt,bottom=5pt,breakable,title={\textbf{Atenção}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Manual do Usuário — Painel Administrativo}
+\fancyhead[R]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{
+    \vspace{-2cm}
+    {\Huge\bfseries\color{brandwine} Manual do Usuário}\\[0.3cm]
+    {\Large Como editar o site pelo Painel Administrativo}
+}
+\author{Guia para secretárias e demais usuários do site}
+\date{Agosto de 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+\small
+Este manual foi escrito para quem vai atualizar o site \textbf{sem precisar entender nada de
+programação}. Todas as tarefas do dia a dia — trocar um texto, publicar uma notícia, adicionar
+uma foto — são feitas preenchendo formulários simples, do mesmo jeito que se preenche um
+formulário do Word ou do Google Forms.
+\end{minipage}
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% =========================================================================
+\section{Acessando o Painel Administrativo}
+% =========================================================================
+
+\begin{enumerate}[leftmargin=2em]
+    \item Abra o navegador e acesse o endereço do site seguido de \texttt{/admin/login}
+          (por exemplo: \texttt{https://seusite.com.br/admin/login}).
+    \item Digite o \textbf{e-mail} e a \textbf{senha} que foram fornecidos a você.
+    \item Se você usa sempre o mesmo computador, deixe marcada a opção \textbf{"Lembrar por 30
+          dias"} — assim você não precisa digitar a senha toda vez que voltar ao site nos
+          próximos 30 dias.
+    \item Clique em \textbf{Entrar}.
+\end{enumerate}
+
+\begin{aviso}
+Depois de 5 tentativas com a senha errada em menos de um minuto, o sistema bloqueia
+temporariamente novas tentativas por segurança. Espere um minuto e tente novamente com calma.
+Se esqueceu a senha de verdade, peça para quem administra o servidor gerar uma nova.
+\end{aviso}
+
+Depois de entrar, você verá o \textbf{Painel principal}: uma lista com todas as partes do site
+que podem ser editadas. Clique em \textbf{Editar} em qualquer uma delas para começar.
+
+Para sair com segurança ao terminar (principalmente em computador compartilhado), clique em
+\textbf{Sair} no canto superior direito.
+
+% =========================================================================
+\section{Regras que valem para todas as telas}
+% =========================================================================
+
+\begin{itemize}[leftmargin=2em]
+    \item Depois de alterar qualquer campo, sempre clique no botão \textbf{Salvar alterações}
+          no final da página — sem isso, nada é gravado.
+    \item Assim que você salva, a mudança já aparece no site \textbf{na mesma hora} — não é
+          preciso "publicar" nem esperar.
+    \item Se algum campo obrigatório ficar em branco, o sistema avisa em vermelho no topo da
+          página o que precisa ser corrigido.
+    \item Para conferir como ficou, abra o site em outra aba do navegador.
+\end{itemize}
+
+\begin{dica}
+Antes de excluir alguma coisa (uma notícia, um membro da equipe, uma imagem do carrossel),
+pense duas vezes: geralmente não tem como desfazer. Se tiver dúvida, você pode simplesmente
+deixar como está e perguntar antes.
+\end{dica}
+
+% =========================================================================
+\section{Configurações Gerais}
+% =========================================================================
+
+Onde ficam o nome do site, a sigla, o logo que aparece no cabeçalho e os links das redes
+sociais.
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Nome do site / departamento}: aparece no título da aba do navegador e no
+          rodapé.
+    \item \textbf{Sigla}: usada em alguns lugares do menu.
+    \item \textbf{Logo do site}: clique em "Escolher arquivo", selecione uma imagem do seu
+          computador (de preferência com fundo transparente, formato PNG) e salve.
+    \item \textbf{Redes sociais}: cole o link completo (começando com \texttt{https://}) de
+          cada rede. Deixe em branco a que o departamento não tiver — o ícone correspondente
+          simplesmente não aparece no site.
+\end{enumerate}
+
+% =========================================================================
+\section{Rodapé do Site}
+% =========================================================================
+
+Tudo que aparece na parte de baixo, em todas as páginas: a imagem do canto inferior esquerdo, o
+texto de descrição, o endereço/telefone/e-mail de contato exibidos ali, e o texto de direitos
+autorais.
+
+\begin{dica}
+O fundo do rodapé é escuro. Se for trocar a imagem, prefira uma que fique legível sobre fundo
+escuro (de preferência com fundo transparente).
+\end{dica}
+
+% =========================================================================
+\section{Página Inicial}
+% =========================================================================
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Título principal} e \textbf{Subtítulo}: o texto de boas-vindas em destaque no
+          topo da página inicial.
+    \item \textbf{Destaques}: os três (ou mais) cartões com ícone, título e texto curto, logo
+          abaixo. Use o botão \textbf{+ Adicionar destaque} para incluir mais um, ou o botão
+          \textbf{X} ao lado de um item para removê-lo.
+    \item \textbf{Seção "Quem somos"}: título e texto curto que aparecem mais abaixo na página
+          inicial.
+\end{itemize}
+
+% =========================================================================
+\section{Carrossel de Imagens}
+% =========================================================================
+
+O carrossel é a faixa de fotos que gira automaticamente no topo da página inicial.
+
+\begin{enumerate}[leftmargin=2em]
+    \item Para trocar a foto de uma imagem já existente, use o campo \textbf{Nova imagem} da
+          linha correspondente — não precisa mexer nas outras.
+    \item A \textbf{legenda} é opcional; se preenchida, aparece por cima da foto.
+    \item Use \textbf{+ Adicionar imagem} para incluir mais fotos, ou o \textbf{X} para remover.
+    \item Se a lista de imagens ficar vazia, o carrossel simplesmente não aparece na página
+          inicial.
+\end{enumerate}
+
+% =========================================================================
+\section{Notícias e Editais}
+% =========================================================================
+
+Diferente das outras seções, aqui existe uma lista de publicações — cada notícia ou edital é um
+item separado.
+
+\subsection{Publicar uma notícia ou edital novo}
+
+\begin{enumerate}[leftmargin=2em]
+    \item Na tela "Notícias e Editais", clique em \textbf{+ Nova publicação}.
+    \item Escolha o \textbf{Tipo}: Notícia ou Edital.
+    \item Preencha a \textbf{Data de publicação}, o \textbf{Título}, o \textbf{Resumo} (aparece
+          nos cartões da página inicial e da listagem) e o \textbf{Conteúdo completo}.
+    \item Se quiser, adicione uma \textbf{Imagem} de capa.
+    \item Para editais, é comum anexar o documento oficial: use o campo \textbf{Anexo} para
+          enviar um PDF, Word ou Excel.
+    \item Clique em \textbf{Publicar}.
+\end{enumerate}
+
+\subsection{Editar ou excluir uma publicação existente}
+
+Na lista de notícias/editais, use os botões \textbf{Editar} ou \textbf{Excluir} na linha
+correspondente. Ao editar, se você não enviar uma nova imagem ou anexo, os que já existiam são
+mantidos.
+
+\begin{aviso}
+A exclusão de uma notícia ou edital é definitiva. Não há como recuperar depois.
+\end{aviso}
+
+\subsection{Onde essas publicações aparecem}
+
+As \textbf{6 mais recentes} aparecem automaticamente na página inicial, e todas ficam listadas
+em \texttt{/noticias}, com filtro por tipo (Notícias / Editais).
+
+% =========================================================================
+\section{Eventos}
+% =========================================================================
+
+Funciona de forma parecida com Notícias, mas para eventos com data marcada (palestras,
+seminários, prazos).
+
+\begin{enumerate}[leftmargin=2em]
+    \item No topo da tela "Eventos", existe um interruptor \textbf{"Mostrar Eventos no menu
+          principal"}. Enquanto ele estiver desligado, a seção de Eventos fica invisível no
+          site (menu e página inicial) — os eventos continuam cadastrados, só não aparecem
+          publicamente.
+    \item Para criar um evento, clique em \textbf{+ Novo evento} e preencha título, data, local
+          (opcional), descrição (opcional) e um link com mais informações (opcional).
+\end{enumerate}
+
+\begin{dica}
+Só ligue o interruptor de Eventos quando já tiver pelo menos um evento futuro cadastrado — assim
+a página não fica vazia para quem visitar o site.
+\end{dica}
+
+% =========================================================================
+\section{Sobre o Departamento}
+% =========================================================================
+
+Título, texto de introdução, texto completo (pode ter vários parágrafos — deixe uma linha em
+branco entre eles), uma imagem, e uma lista de pontos rápidos (ex.: "Atendimento humanizado",
+"Transparência nas informações").
+
+% =========================================================================
+\section{Serviços}
+% =========================================================================
+
+Lista dos serviços oferecidos pelo departamento, cada um com um ícone, título e descrição curta.
+Use \textbf{+ Adicionar serviço} / \textbf{X} para incluir ou remover itens, do mesmo jeito que
+na página inicial.
+
+% =========================================================================
+\section{Graduação e Pós-Graduação}
+% =========================================================================
+
+Cada uma dessas duas páginas lista os cursos (ou programas de pós-graduação) do departamento.
+
+\begin{enumerate}[leftmargin=2em]
+    \item Marque ou desmarque \textbf{"Mostrar no menu principal"} para exibir ou esconder o
+          item correspondente no menu do site — a página continua existindo, só não aparece no
+          menu quando desmarcada.
+    \item Para cada curso, informe o \textbf{Nome} e, se quiser, um \textbf{Link} (para a página
+          oficial do curso, o SIGAA, ou onde fizer mais sentido).
+\end{enumerate}
+
+% =========================================================================
+\section{Equipe}
+% =========================================================================
+
+\begin{enumerate}[leftmargin=2em]
+    \item Para cada membro, preencha \textbf{Nome}, \textbf{Cargo/função} e, se quiser, envie
+          uma \textbf{foto}.
+    \item Use \textbf{+ Adicionar membro} para incluir alguém novo, ou o \textbf{X} para
+          remover.
+    \item Ao editar um membro já existente, se você não enviar uma foto nova, a foto atual dele
+          é mantida.
+\end{enumerate}
+
+% =========================================================================
+\section{Contato}
+% =========================================================================
+
+Endereço, telefones, e-mails e o link do mapa que aparecem na página de Contato do site.
+
+\begin{dica}
+Para pegar o link do mapa: abra o \href{https://maps.google.com}{Google Maps}, encontre o
+endereço do departamento, clique em \textbf{Compartilhar} $\rightarrow$ \textbf{Incorporar um
+mapa}, e copie apenas o endereço que aparece dentro de \texttt{src="..."}. Cole esse endereço no
+campo \textbf{Link do mapa}.
+\end{dica}
+
+% =========================================================================
+\section{Perguntas Frequentes}
+% =========================================================================
+
+\begin{description}[leftmargin=2em,style=nextline]
+    \item[Salvei, mas não vejo a mudança no site.] Atualize a página do site (tecla F5) —
+        algumas vezes o navegador guarda uma versão antiga da página em memória.
+    \item[A imagem que enviei não aparece direito.] Confira se o arquivo é realmente uma
+        imagem (JPG, PNG ou similar) e se não é grande demais. Se o problema persistir, tente
+        enviar a mesma foto num formato diferente (por exemplo, salvando como JPG).
+    \item[Errei e quero desfazer uma alteração.] Não existe um botão "desfazer" — a forma mais
+        simples é editar o campo de novo, colocando o valor de volta como estava.
+    \item[Esqueci minha senha.] Somente quem administra o servidor consegue gerar uma senha
+        nova (é feita por linha de comando, não existe "recuperar senha por e-mail" neste
+        sistema).
+    \item[Posso acessar o painel pelo celular?] Sim, as telas se ajustam a telas menores, mas
+        preencher formulários grandes (como uma notícia longa) costuma ser mais confortável num
+        computador.
+\end{description}
+
+% =========================================================================
+\section{Precisa de ajuda?}
+% =========================================================================
+
+Se alguma dúvida não foi respondida neste manual, entre em contato com quem administra o
+servidor do site (equipe técnica responsável pela implantação).
+
+\end{document}

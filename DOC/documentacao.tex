@@ -1,0 +1,678 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{array}
+
+\renewcommand{\contentsname}{Sumário}
+
+\definecolor{brandwine}{HTML}{962038}
+\definecolor{brandcharcoal}{HTML}{2B2B2B}
+\definecolor{codebg}{HTML}{F5F5F5}
+\definecolor{codekeyword}{HTML}{962038}
+\definecolor{codecomment}{HTML}{6E6E6E}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=brandwine,
+    urlcolor=brandwine,
+    citecolor=brandwine,
+    pdftitle={Documentação Técnica - Site Institucional},
+    pdfauthor={Departamento Modelo}
+}
+
+\titleformat{\section}{\Large\bfseries\color{brandwine}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{brandcharcoal}}{\thesubsection}{1em}{}
+
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\footnotesize,
+    commentstyle=\color{codecomment}\itshape,
+    keywordstyle=\color{codekeyword}\bfseries,
+    frame=single,
+    rulecolor=\color{gray!40},
+    breaklines=true,
+    breakatwhitespace=false,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=2,
+    showstringspaces=false,
+    xleftmargin=1.5em,
+    framexleftmargin=1.2em
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Documentação Técnica — Site Institucional}
+\fancyhead[R]{\small \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{
+    \vspace{-2cm}
+    {\Huge\bfseries\color{brandwine} Documentação Técnica}\\[0.3cm]
+    {\Large Site Institucional para Departamentos (Template Laravel)}
+}
+\author{Projeto: departamento-ufop}
+\date{Agosto de 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\vspace{1cm}
+\begin{center}
+\begin{minipage}{0.85\textwidth}
+\small
+\textbf{Resumo.} Este documento descreve a arquitetura, o funcionamento e os componentes de
+código de um site institucional desenvolvido para departamentos (modelo inspirado nos portais
+da Universidade Federal de Ouro Preto — UFOP), construído em Laravel, servido via Docker e
+projetado deliberadamente \textbf{sem banco de dados}: todo o conteúdo editável é armazenado em
+arquivos de texto (JSON) no próprio disco do servidor. O objetivo é oferecer um site rápido de
+implantar, fácil de manter e com uma superfície de ataque reduzida em relação a soluções
+tradicionais baseadas em CMS de terceiros (como WordPress).
+\end{minipage}
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+% =========================================================================
+\section{Introdução}
+% =========================================================================
+
+Este projeto nasceu da necessidade de um departamento acadêmico (no molde dos institutos e
+departamentos da UFOP) ter um site institucional próprio, com identidade visual da instituição,
+que pudesse ser editado no dia a dia por uma secretária ou servidor \textbf{sem qualquer
+conhecimento de programação}, e que ao mesmo tempo fosse mais simples e mais seguro de operar
+do que uma instalação WordPress tradicional — plataforma que, nos servidores da própria UFOP,
+historicamente sofre ataques com frequência (em geral por falhas em plugins de terceiros).
+
+A decisão de projeto mais importante, tomada logo no início, foi: \textbf{o site não usa banco
+de dados}. Em vez de MySQL, PostgreSQL ou até SQLite, todo o conteúdo (textos, listas de
+notícias, membros de equipe, configurações) é guardado em arquivos \texttt{.json} dentro da
+pasta \texttt{storage/} do próprio Laravel. As implicações dessa escolha — vantagens de
+simplicidade e segurança, e as poucas desvantagens — são discutidas ao longo deste documento.
+
+\subsection{Tecnologias utilizadas}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Backend}: PHP 8.4 + Laravel 13 (framework), sem Eloquent/ORM para o conteúdo do site.
+    \item \textbf{Frontend}: Blade (motor de templates do Laravel) sobre o tema visual
+          \emph{Neoton} (HTML/CSS/JS adquirido comercialmente), adaptado e re-corado com a
+          paleta institucional da UFOP.
+    \item \textbf{Servidor web}: Apache 2.4 (imagem oficial \texttt{php:8.4-apache}).
+    \item \textbf{Contêineres}: Docker + Docker Compose (um único serviço, sem banco de dados).
+    \item \textbf{Persistência}: sistema de arquivos, com dois diretórios montados como volume
+          Docker para sobreviver a reconstruções da imagem: \texttt{storage/content/} (JSON) e
+          \texttt{storage/uploads/} (imagens/anexos enviados pelo painel).
+\end{itemize}
+
+% =========================================================================
+\section{Visão Geral: Como o Sistema Funciona}
+% =========================================================================
+
+Esta seção explica, em linhas gerais e sem entrar em detalhes de código, o que acontece "por
+trás das cortinas" quando alguém visita o site ou quando a secretária edita alguma informação
+pelo painel administrativo.
+
+\subsection{Não existe banco de dados}
+
+Um site tradicional (WordPress, Joomla, e a grande maioria dos sistemas administráveis) guarda
+o conteúdo dentro de um Sistema Gerenciador de Banco de Dados (SGBD), como MySQL ou PostgreSQL:
+um programa separado, rodando ao lado da aplicação, que armazena os dados em tabelas e responde
+a consultas na linguagem SQL.
+
+Neste projeto, essa peça inteira foi removida. Em vez de tabelas, cada "seção" do site (a
+página inicial, a lista de notícias, a equipe, etc.) tem um arquivo de texto simples no formato
+JSON, guardado em \texttt{storage/app/private/content/}. Por exemplo, o arquivo
+\texttt{noticias.json} contém, de forma legível por humanos, todas as notícias e editais já
+publicados:
+
+\begin{lstlisting}[caption={Exemplo real de storage/content/noticias.json}]
+{
+    "items": [
+        {
+            "id": "exemplo-noticia",
+            "tipo": "noticia",
+            "titulo": "Departamento realiza evento de boas-vindas",
+            "resumo": "Confira como foi o evento...",
+            "conteudo": "Texto completo da noticia...",
+            "imagem": "assets/images/hero-blog/1.jpg",
+            "anexo": "",
+            "data_publicacao": "2026-01-15"
+        }
+    ]
+}
+\end{lstlisting}
+
+Quando um visitante acessa \texttt{/noticias}, o Laravel simplesmente lê esse arquivo, decodifica
+o JSON para um array PHP, ordena pelas datas e desenha a página HTML em cima desses dados. Não
+existe nenhuma consulta SQL em lugar nenhum do código da aplicação.
+
+\textbf{Vantagem direta de segurança}: como não existe banco de dados nem linguagem de consulta
+sendo interpretada, o site é estruturalmente imune a \emph{SQL Injection} — uma das duas classes
+de ataque mais comuns contra sites WordPress.
+
+\subsection{O ciclo de vida de uma requisição}
+
+Quando alguém digita o endereço do site no navegador, acontece, resumidamente, o seguinte
+percurso dentro da aplicação Laravel:
+
+\begin{enumerate}[leftmargin=2em]
+    \item O Apache recebe a requisição HTTP e a repassa ao PHP (\texttt{public/index.php}),
+          ponto de entrada único do Laravel.
+    \item O \textbf{roteador} (\texttt{routes/web.php}) identifica qual URL foi acessada (por
+          exemplo, \texttt{/noticias}) e qual \emph{controller} deve tratá-la.
+    \item O \textbf{controller} (por exemplo, \texttt{NoticiaController}) busca os dados
+          necessários chamando uma classe de suporte (\texttt{NoticiaStore}), que por sua vez lê
+          o arquivo JSON correspondente do disco através da classe genérica
+          \texttt{ContentStore}.
+    \item O controller entrega esses dados para uma \textbf{view} Blade (um arquivo
+          \texttt{.blade.php}), que combina o HTML do tema com os dados reais e produz a página
+          final.
+    \item Antes de a resposta sair, um conjunto de \textbf{middlewares} (camadas que interceptam
+          a requisição/resposta) adicionam cabeçalhos de segurança e, no caso das rotas do
+          painel, verificam se o usuário está autenticado e registram a ação num log de
+          auditoria.
+\end{enumerate}
+
+\subsection{O painel administrativo, sem tabela de usuários}
+
+Diferente da maioria dos sistemas, este projeto não tem uma tabela \texttt{users} nem um sistema
+de cadastro — existe \textbf{uma única conta de administrador}, cujo e-mail e senha (já
+criptografada com \emph{bcrypt}) ficam guardados em variáveis de ambiente (\texttt{.env}), nunca
+em texto puro e nunca no código-fonte.
+
+O login funciona da seguinte forma:
+
+\begin{enumerate}[leftmargin=2em]
+    \item A secretária acessa \texttt{/admin/login} e informa e-mail e senha.
+    \item O \texttt{Admin\textbackslash AuthController} compara o e-mail com
+          \texttt{ADMIN\_EMAIL} e verifica a senha com \texttt{Hash::check()} contra o hash
+          \texttt{ADMIN\_PASSWORD\_HASH}.
+    \item Se corretos, a sessão do navegador recebe uma marca (\texttt{admin\_logged\_in = true})
+          — é essa marca que o middleware \texttt{EnsureAdminAuthenticated} verifica em toda
+          rota protegida do painel.
+    \item Opcionalmente, se a caixa "Lembrar por 30 dias" estiver marcada, um cookie adicional,
+          criptografado pelo próprio Laravel e amarrado ao hash de senha atual, mantém a sessão
+          ativa mesmo depois de fechar o navegador (ver Seção~\ref{sec:seguranca}).
+\end{enumerate}
+
+\subsection{Conteúdo dinâmico vs. estático}
+
+É importante distinguir dois tipos de "seção" no sistema:
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Seções de página única} (Configurações, Rodapé, Página Inicial, Sobre,
+          Serviços, Graduação, Pós-Graduação, Equipe, Contato, Carrossel): cada uma tem
+          \emph{um único} arquivo JSON, editado através de \emph{um único} formulário no painel
+          — a secretária altera os campos e salva tudo de uma vez.
+    \item \textbf{Seções de lista com CRUD completo} (Notícias/Editais e Eventos): cada
+          publicação é um item independente, com seu próprio identificador, e o painel oferece
+          telas de \emph{listar, criar, editar e excluir} — muito mais parecido com o
+          funcionamento de um blog tradicional, mas ainda gravando tudo num único arquivo JSON
+          por trás (um array de itens).
+\end{itemize}
+
+% =========================================================================
+\section{Estrutura de Pastas do Projeto}
+% =========================================================================
+
+A árvore abaixo mostra as pastas e arquivos mais relevantes dentro de \texttt{site/} (raiz do
+projeto Laravel e do repositório Git):
+
+\begin{lstlisting}[caption={Estrutura simplificada de pastas}]
+site/
+|-- app/
+|   |-- Http/
+|   |   |-- Controllers/
+|   |   |   |-- SiteController.php
+|   |   |   |-- NoticiaController.php
+|   |   |   |-- EventoController.php
+|   |   |   `-- Admin/
+|   |   |       |-- AuthController.php
+|   |   |       |-- ContentController.php
+|   |   |       |-- NoticiaController.php
+|   |   |       `-- EventoController.php
+|   |   `-- Middleware/
+|   |       |-- EnsureAdminAuthenticated.php
+|   |       |-- SecurityHeaders.php
+|   |       |-- AdminAuditLog.php
+|   |       `-- EnsureHttps.php
+|   |-- Providers/AppServiceProvider.php
+|   `-- Support/
+|       |-- ContentStore.php
+|       |-- ContentDefaults.php
+|       |-- NoticiaStore.php
+|       |-- EventoStore.php
+|       `-- ImageUploader.php
+|-- config/
+|   |-- admin.php
+|   `-- logging.php
+|-- resources/views/
+|   |-- layouts/app.blade.php
+|   |-- partials/ (header, footer, breadcrumb)
+|   |-- site/     (paginas publicas)
+|   `-- admin/    (paginas do painel)
+|-- routes/web.php
+|-- public/assets/  (CSS, JS, fontes e imagens do tema)
+|-- storage/
+|   |-- content/    (JSON - conteudo do site, fora do Git)
+|   `-- uploads/    (imagens/anexos enviados, fora do Git)
+|-- DOC/            (esta documentacao)
+|-- Dockerfile
+`-- docker-compose.yml
+\end{lstlisting}
+
+% =========================================================================
+\section{Documentação de Código}
+% =========================================================================
+
+Esta seção descreve, componente por componente, tudo o que foi desenvolvido especificamente
+para este projeto (o \emph{framework} Laravel em si não é documentado aqui, apenas o código de
+aplicação escrito sob medida).
+
+\subsection{Rotas (\texttt{routes/web.php})}
+
+\subsubsection{Rotas públicas}
+
+\begin{longtable}{@{}p{4.5cm}p{4cm}p{6.5cm}@{}}
+\toprule
+\textbf{URL} & \textbf{Nome da rota} & \textbf{Descrição} \\
+\midrule
+\endhead
+\texttt{/} & \texttt{home} & Página inicial (carrossel, destaques, últimas notícias, "quem somos") \\
+\texttt{/sobre} & \texttt{sobre} & Sobre o Departamento \\
+\texttt{/servicos} & \texttt{servicos} & Lista de serviços oferecidos \\
+\texttt{/graduacao} & \texttt{graduacao} & Cursos de graduação \\
+\texttt{/pos-graduacao} & \texttt{pos-graduacao} & Programas de pós-graduação \\
+\texttt{/equipe} & \texttt{equipe} & Membros da equipe \\
+\texttt{/contato} & \texttt{contato} & Informações de contato e mapa \\
+\texttt{/noticias} & \texttt{noticias.index} & Listagem de notícias/editais, com filtro e paginação \\
+\texttt{/noticias/\{id\}} & \texttt{noticias.show} & Detalhe de uma notícia/edital \\
+\texttt{/eventos} & \texttt{eventos.index} & Listagem de eventos (quando ativada) \\
+\bottomrule
+\end{longtable}
+
+\subsubsection{Rotas do painel administrativo (prefixo \texttt{/admin})}
+
+Todas as rotas abaixo, exceto login, exigem os middlewares \texttt{admin.auth} (autenticação) e
+\texttt{admin.audit} (log de auditoria).
+
+\begin{longtable}{@{}p{5cm}p{3cm}p{6.5cm}@{}}
+\toprule
+\textbf{URL} & \textbf{Método} & \textbf{Descrição} \\
+\midrule
+\endhead
+\texttt{/admin/login} & GET/POST & Tela e processamento de login (com limite de tentativas) \\
+\texttt{/admin/logout} & POST & Encerra a sessão \\
+\texttt{/admin} & GET & Painel principal (lista todas as seções) \\
+\texttt{/admin/configuracoes} & GET/POST & Nome do site, logo do cabeçalho, redes sociais \\
+\texttt{/admin/rodape} & GET/POST & Logo do rodapé, texto, contato exibido, direitos autorais \\
+\texttt{/admin/home} & GET/POST & Título/subtítulo da home e cards de destaque \\
+\texttt{/admin/carrossel} & GET/POST & Imagens do carrossel da home \\
+\texttt{/admin/sobre} & GET/POST & Texto e imagem da página Sobre \\
+\texttt{/admin/servicos} & GET/POST & Lista de serviços \\
+\texttt{/admin/graduacao} & GET/POST & Cursos + visibilidade no menu \\
+\texttt{/admin/pos-graduacao} & GET/POST & Programas + visibilidade no menu \\
+\texttt{/admin/equipe} & GET/POST & Membros da equipe (com foto) \\
+\texttt{/admin/contato} & GET/POST & Dados da página de contato \\
+\texttt{/admin/noticias} & GET & Lista notícias/editais \\
+\texttt{/admin/noticias/criar} & GET/POST & Criar publicação \\
+\texttt{/admin/noticias/\{id\}/editar} & GET/PUT & Editar publicação \\
+\texttt{/admin/noticias/\{id\}} & DELETE & Excluir publicação \\
+\texttt{/admin/eventos} & GET & Lista eventos + interruptor de visibilidade no menu \\
+\texttt{/admin/eventos/visibilidade} & POST & Liga/desliga "Eventos" no menu e na home \\
+\texttt{/admin/eventos/criar} & GET/POST & Criar evento \\
+\texttt{/admin/eventos/\{id\}/editar} & GET/PUT & Editar evento \\
+\texttt{/admin/eventos/\{id\}} & DELETE & Excluir evento \\
+\bottomrule
+\end{longtable}
+
+\subsection{Controllers}
+
+\subsubsection{\texttt{SiteController}}
+Responsável pelas páginas públicas de conteúdo único (home, sobre, serviços, graduação,
+pós-graduação, equipe, contato). Cada método busca o conteúdo correspondente via
+\texttt{ContentStore::get()}, usando \texttt{ContentDefaults} como valor padrão, e devolve a
+view Blade da respectiva página. O método \texttt{home()} é o mais elaborado: também consulta
+\texttt{NoticiaStore::latest()} (últimas notícias) e, se a seção de eventos estiver ativada,
+\texttt{EventoStore::upcoming()} (próximos eventos), ajustando o layout da página inicial para
+duas colunas nesse caso.
+
+\subsubsection{\texttt{NoticiaController} e \texttt{EventoController} (públicos)}
+Cuidam da listagem e exibição pública de notícias/editais e eventos. O \texttt{NoticiaController}
+implementa paginação manual usando \texttt{Illuminate\textbackslash Pagination\textbackslash LengthAwarePaginator}
+diretamente sobre um array PHP (já que não há consulta a banco de dados para paginar).
+
+\subsubsection{\texttt{Admin\textbackslash AuthController}}
+Login, logout e a lógica do cookie "lembrar-me". Registra tentativas de login (sucesso e falha)
+no canal de log \texttt{admin} (Seção~\ref{sec:seguranca}).
+
+\subsubsection{\texttt{Admin\textbackslash ContentController}}
+O maior controller do projeto: concentra a edição de todas as seções de "página única"
+(configurações, rodapé, home, carrossel, sobre, serviços, graduação, pós-graduação, equipe,
+contato). Cada seção tem um par de métodos \texttt{\{secao\}Edit()} / \texttt{\{secao\}Update()}.
+Um método auxiliar privado, \texttt{removerLinhasVazias()}, filtra linhas vazias enviadas pelos
+formulários com listas repetíveis (destaques, itens de serviço). Graduação e Pós-Graduação
+compartilham a mesma view (\texttt{admin.sections.cursos}) e o mesmo método auxiliar
+\texttt{salvarPaginaCursos()}, já que têm estrutura idêntica.
+
+\subsubsection{\texttt{Admin\textbackslash NoticiaController} e \texttt{Admin\textbackslash EventoController}}
+Implementam um CRUD completo (\texttt{index}, \texttt{create}, \texttt{store}, \texttt{edit},
+\texttt{update}, \texttt{destroy}) sobre suas respectivas \emph{stores}. O de Eventos tem um
+método adicional, \texttt{updateVisibilidade()}, que liga/desliga o item "Eventos" do menu
+principal e o bloco de eventos da página inicial simultaneamente.
+
+\subsection{Middlewares}
+
+\begin{description}[leftmargin=2em,style=nextline]
+    \item[\texttt{EnsureAdminAuthenticated}] Protege as rotas do painel. Verifica a sessão e,
+        na ausência dela, o cookie de "lembrar-me"; caso nenhum dos dois seja válido, redireciona
+        para o login.
+    \item[\texttt{SecurityHeaders}] Adiciona cabeçalhos HTTP de segurança a toda resposta
+        (detalhado na Seção~\ref{sec:seguranca}).
+    \item[\texttt{AdminAuditLog}] Registra, no canal de log \texttt{admin}, toda requisição
+        POST/PUT/PATCH/DELETE bem-sucedida feita dentro do painel — nome da rota, método, IP e
+        e-mail do administrador.
+    \item[\texttt{EnsureHttps}] Redireciona para HTTPS quando a variável de ambiente
+        \texttt{FORCE\_HTTPS} está ativada. Desligado por padrão.
+\end{description}
+
+\subsection{Classes de suporte (\texttt{app/Support})}
+
+\subsubsection{\texttt{ContentStore}}
+O alicerce de todo o sistema de conteúdo. Duas funções estáticas apenas:
+
+\begin{lstlisting}[language=PHP, caption={app/Support/ContentStore.php (resumido)}]
+class ContentStore
+{
+    public static function get(string $key, array $defaults = []): array
+    {
+        $disk = Storage::disk('local');
+        $path = "content/{$key}.json";
+
+        if (! $disk->exists($path)) {
+            return $defaults;
+        }
+
+        $saved = json_decode($disk->get($path), true);
+
+        return is_array($saved) ? array_replace($defaults, $saved) : $defaults;
+    }
+
+    public static function save(string $key, array $data): void
+    {
+        Storage::disk('local')->put(
+            "content/{$key}.json",
+            json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+        );
+    }
+}
+\end{lstlisting}
+
+O uso de \texttt{array\_replace(\$defaults, \$saved)} garante que, mesmo que um campo novo seja
+adicionado ao sistema depois que o arquivo já existia (por exemplo, ao evoluir o site), o valor
+padrão desse campo novo é usado até que a secretária o edite pela primeira vez — não há erro por
+"campo faltando".
+
+\subsubsection{\texttt{ContentDefaults}}
+Uma classe com um método estático por seção (\texttt{configuracoes()}, \texttt{rodape()},
+\texttt{home()}, \texttt{sobre()}, \texttt{servicos()}, \texttt{graduacao()},
+\texttt{posGraduacao()}, \texttt{equipe()}, \texttt{contato()}, \texttt{carrossel()},
+\texttt{noticias()}, \texttt{eventos()}), cada um devolvendo o array de valores padrão/exemplo
+daquela seção. É a "fonte da verdade" de como um site novo aparece antes de qualquer edição.
+
+\subsubsection{\texttt{NoticiaStore} e \texttt{EventoStore}}
+Implementam um pequeno "repositório" de itens sobre um único arquivo JSON, com métodos
+\texttt{all()}, \texttt{find(\$id)}, \texttt{save(\$item)} (cria ou atualiza, conforme a
+presença de um \texttt{id}) e \texttt{delete(\$id)}. Os identificadores são gerados com
+\texttt{Str::random(8)}, verificando colisão contra os já existentes. O \texttt{EventoStore}
+ainda guarda, no mesmo arquivo, um sinalizador \texttt{mostrar\_menu} (\texttt{mostrarMenu()} /
+\texttt{setMostrarMenu()}), separado da lista de itens.
+
+\subsubsection{\texttt{ImageUploader}}
+Recebe um arquivo enviado por formulário e devolve o caminho onde ele foi salvo. Dois cuidados
+de segurança relevantes: (1) se nenhum arquivo novo for enviado, devolve o valor atual (permite
+editar outros campos sem re-enviar a imagem); (2) a extensão do arquivo salvo é obtida do
+\textbf{conteúdo real detectado} (\texttt{\$file->extension()}), não do nome que o navegador do
+usuário informou — evitando que um arquivo malicioso disfarçado receba uma extensão enganosa.
+
+\subsection{Provider (\texttt{AppServiceProvider})}
+
+Dois papéis principais:
+
+\begin{enumerate}[leftmargin=2em]
+    \item Registra um \emph{View Composer} global (\texttt{View::composer('*', ...)}) que
+          injeta em \textbf{toda} view renderizada as variáveis \texttt{\$siteSettings},
+          \texttt{\$rodape}, \texttt{\$menuGraduacao}, \texttt{\$menuPosGraduacao} e
+          \texttt{\$menuEventosVisivel} — é assim que o cabeçalho e o rodapé, presentes em
+          todas as páginas, têm acesso aos dados de configuração sem que cada controller
+          precise repassá-los manualmente.
+    \item Define o limitador de taxa (\emph{rate limiter}) nomeado \texttt{login}, usado pela
+          rota de autenticação (Seção~\ref{sec:seguranca}).
+\end{enumerate}
+
+\subsection{Configuração}
+
+\begin{description}[leftmargin=2em,style=nextline]
+    \item[\texttt{config/admin.php}] Expõe \texttt{ADMIN\_EMAIL} e \texttt{ADMIN\_PASSWORD\_HASH}
+        do \texttt{.env} para o restante da aplicação.
+    \item[\texttt{config/logging.php}] Define o canal \texttt{admin} (arquivo diário,
+        \texttt{storage/logs/admin-AAAA-MM-DD.log}, retenção de 90 dias) usado pelo log de
+        auditoria.
+    \item[\texttt{config/app.php}] Adiciona a chave \texttt{force\_https}, ligada à variável de
+        ambiente \texttt{FORCE\_HTTPS}.
+\end{description}
+
+\subsection{Views (Blade)}
+
+\begin{description}[leftmargin=2em,style=nextline]
+    \item[\texttt{layouts/app.blade.php}] Layout-mãe de todas as páginas públicas: cabeçalho de
+        \texttt{<head>} (favicon, CSS), tela de carregamento, inclusão do cabeçalho/rodapé,
+        botão flutuante "voltar ao topo" com anel de progresso em SVG, e os scripts JS do tema.
+    \item[\texttt{partials/header.blade.php}] Cabeçalho: logo, nome do site, menu principal
+        (com os itens condicionais de Graduação/Pós-Graduação/Eventos) e ícones de redes
+        sociais/acesso ao admin.
+    \item[\texttt{partials/footer.blade.php}] Rodapé: logo, texto, lista de "links rápidos"
+        \textbf{gerada dinamicamente} a partir dos mesmos itens do menu principal (dividida em
+        duas colunas quando ultrapassa 5 itens), dados de contato e nota de direitos autorais.
+    \item[\texttt{partials/breadcrumb.blade.php}] Faixa de título usada no topo das páginas
+        internas (Sobre, Serviços, Notícias, etc.).
+    \item[\texttt{site/*.blade.php}] Uma view por página pública.
+    \item[\texttt{admin/layout.blade.php}] Layout do painel: barra superior, menu lateral com
+        todas as seções, área de mensagens de sucesso/erro.
+    \item[\texttt{admin/sections/*.blade.php}] Um formulário por seção de página única.
+    \item[\texttt{admin/noticias/*.blade.php} e \texttt{admin/eventos/*.blade.php}] Telas de
+        listagem e formulário de criação/edição do CRUD de notícias e eventos.
+\end{description}
+
+Listas repetíveis dentro dos formulários (destaques da home, itens de serviço, cursos, membros
+da equipe, slides do carrossel) seguem sempre o mesmo padrão de JavaScript: um botão "+
+Adicionar" clona um \texttt{<template>} HTML, usando um \textbf{contador que nunca reaproveita
+um índice já usado} — mesmo depois de remover uma linha do meio da lista. Essa escolha evita um
+problema real encontrado durante o desenvolvimento: se dois campos diferentes acabassem sendo
+enviados ao servidor com o mesmo índice numérico, um sobrescreveria silenciosamente os dados do
+outro (por exemplo, apagando a foto de um membro da equipe ao adicionar outro).
+
+\subsection{Esquema de conteúdo por seção}
+
+A tabela a seguir resume os campos armazenados em cada arquivo JSON dentro de
+\texttt{storage/content/}.
+
+\begin{longtable}{@{}p{3.2cm}p{9.8cm}@{}}
+\toprule
+\textbf{Arquivo} & \textbf{Campos principais} \\
+\midrule
+\endhead
+\texttt{configuracoes.json} & nome\_site, sigla, logo, facebook, instagram, twitter, linkedin, youtube \\
+\texttt{rodape.json} & logo, texto, copyright, endereco, telefone, email \\
+\texttt{home.json} & hero\_titulo, hero\_subtitulo, destaques[] (icone, titulo, texto), sobre\_titulo, sobre\_texto \\
+\texttt{carrossel.json} & slides[] (imagem, legenda) \\
+\texttt{sobre.json} & titulo, texto\_intro, texto\_corpo, imagem, destaques[] \\
+\texttt{servicos.json} & titulo, introducao, itens[] (icone, titulo, texto) \\
+\texttt{graduacao.json} / \texttt{pos\_graduacao.json} & titulo, texto\_intro, cursos[] (nome, link), mostrar\_menu \\
+\texttt{equipe.json} & titulo, introducao, membros[] (nome, cargo, foto) \\
+\texttt{contato.json} & titulo, texto\_intro, endereco, telefone\_1/2, email\_1/2, mapa\_embed\_url \\
+\texttt{noticias.json} & items[] (id, tipo, titulo, resumo, conteudo, imagem, anexo, data\_publicacao) \\
+\texttt{eventos.json} & items[] (id, titulo, data\_evento, local, descricao, link), mostrar\_menu \\
+\bottomrule
+\end{longtable}
+
+% =========================================================================
+\section{Identidade Visual}
+% =========================================================================
+
+O HTML/CSS de base é o tema comercial \emph{Neoton} (originalmente um template de blog/revista),
+mantido como referência intacta em \texttt{neoton-html-full-package/} (fora do repositório
+Git, por questões de licença de redistribuição). Apenas os arquivos estáticos necessários
+(CSS, JavaScript, fontes e algumas imagens genéricas) foram copiados para
+\texttt{public/assets/}.
+
+Toda a marca visual da UFOP foi aplicada através de uma única folha de estilo adicional,
+\texttt{public/assets/css/brand.css}, carregada por último (depois do CSS do tema), que
+sobrescreve cores, tipografia de botões e o layout do cabeçalho/rodapé sem precisar alterar o
+tema original. As variáveis de cor centrais são:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Variável CSS} & \textbf{Cor} & \textbf{Uso} \\
+\midrule
+\texttt{--brand-wine} & \#962038 & Vinho institucional (marca, botões, faixa hero) \\
+\texttt{--brand-red-strong} & \#C8102E & Vermelho de destaque (hover, acentos) \\
+\texttt{--brand-charcoal} & \#2B2B2B & Grafite (cabeçalho, rodapé) \\
+\texttt{--brand-gray} / \texttt{--brand-gray-light} & \#6E6E6E / \#919191 & Detalhes, bordas \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+O logo (brasão da UFOP) foi processado a partir de uma imagem oficial de alta resolução,
+removendo o fundo cinza sólido (técnica de \emph{chroma key} via script Python/Pillow), para
+que o brasão branco se integre ao cabeçalho escuro sem aparecer como um retângulo "colado" por
+cima. O favicon do site foi gerado a partir do mesmo brasão, recortado apenas na parte do
+símbolo (sem o texto "UFOP", que fica ilegível em tamanho de ícone de aba).
+
+% =========================================================================
+\section{Segurança}
+\label{sec:seguranca}
+% =========================================================================
+
+\subsection{Proteções estruturais (decorrentes da arquitetura)}
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Sem SQL Injection}: não existe banco de dados nem consulta SQL em nenhuma
+          parte do código da aplicação.
+    \item \textbf{Sem XSS armazenado via terceiros}: o projeto não instala nenhum plugin de
+          terceiros (as únicas dependências PHP são o próprio \texttt{laravel/framework} e
+          \texttt{laravel/tinker}). Todo conteúdo digitado pelo administrador é impresso nas
+          views usando a sintaxe \texttt{\{\{ \}\}} do Blade, que aplica \emph{escape} de HTML
+          automaticamente — nenhuma view usa a sintaxe \texttt{\{!! !!\}} (que imprimiria HTML
+          sem escapar) sobre conteúdo vindo do painel.
+    \item \textbf{Superfície de ataque mínima}: não há formulário público de comentário,
+          cadastro ou upload — a única forma de gravar conteúdo no site é autenticando-se como
+          administrador.
+\end{itemize}
+
+\subsection{Proteções adicionadas explicitamente}
+
+\begin{description}[leftmargin=2em,style=nextline]
+    \item[Limite de tentativas de login] O \emph{rate limiter} \texttt{login}
+        (\texttt{AppServiceProvider}) permite no máximo 5 tentativas por minuto, chaveadas por
+        combinação de e-mail tentado + endereço IP, dificultando ataques de força bruta contra a
+        conta única do administrador.
+    \item[Log de auditoria] Todo login (sucesso ou falha) e toda ação que altera conteúdo ficam
+        registrados em \texttt{storage/logs/admin-*.log}, com data/hora, IP e rota afetada —
+        essencial para investigar qualquer incidente.
+    \item[Cabeçalhos HTTP de segurança] O middleware \texttt{SecurityHeaders} adiciona, a toda
+        resposta: \texttt{X-Frame-Options} (evita que o site seja carregado dentro de um
+        \texttt{<iframe>} de terceiros — proteção contra \emph{clickjacking}),
+        \texttt{X-Content-Type-Options: nosniff}, \texttt{Referrer-Policy},
+        \texttt{Permissions-Policy} e uma \texttt{Content-Security-Policy} restritiva (o site
+        não depende de nenhum CDN externo, então a política pode ser fechada em
+        \texttt{'self'}).
+    \item[Uploads de arquivo] A extensão do arquivo salvo vem do tipo de conteúdo
+        \textbf{efetivamente detectado}, não do nome informado pelo navegador; e o Apache
+        recusa (HTTP 403) qualquer tentativa de executar um arquivo \texttt{.php} a partir do
+        caminho \texttt{/storage/*}, como defesa adicional caso algum arquivo malicioso um dia
+        burle a validação de tipo.
+    \item[HTTPS opcional] A variável \texttt{FORCE\_HTTPS} (desligada por padrão) ativa
+        redirecionamento automático para HTTPS — deve ser ligada apenas depois de o domínio
+        final ter certificado configurado.
+\end{description}
+
+\subsection{Limitações conhecidas (honestidade técnica)}
+
+Nenhuma dessas medidas substitui um antivírus de verdade: a validação de upload confirma que um
+arquivo \emph{é} do tipo que alega ser (uma imagem, um PDF, um Word), mas não varre o conteúdo
+em busca de assinaturas de malware conhecido. Em particular, um documento do Word/Excel com
+macro maliciosa pode passar pela validação — o risco nesse caso recai sobre quem \textbf{baixa e
+abre} o anexo, não sobre o servidor. Uma evolução natural, se necessário, é integrar um
+antivírus de código aberto (como o ClamAV) ao fluxo de upload.
+
+% =========================================================================
+\section{Docker e Implantação (Deploy)}
+% =========================================================================
+
+O projeto roda inteiramente em um único contêiner (\texttt{php:8.4-apache}), sem serviço de
+banco de dados. O \texttt{Dockerfile} instala as extensões PHP necessárias, copia o código,
+executa \texttt{composer install} e cria os diretórios de armazenamento com as permissões
+corretas. O \texttt{docker-compose.yml} expõe a porta 80 do contêiner (mapeada localmente para
+8097) e monta dois volumes:
+
+\begin{lstlisting}[caption={Volumes definidos em docker-compose.yml}]
+volumes:
+  - ./storage/content:/var/www/html/storage/app/private/content
+  - ./storage/uploads:/var/www/html/storage/app/public/uploads
+\end{lstlisting}
+
+Esses dois diretórios são os \textbf{únicos dados reais do site} — todo o restante (código,
+tema) pode ser reconstruído a qualquer momento a partir do repositório Git. Qualquer rotina de
+backup do ambiente de produção deve necessariamente incluir essas duas pastas.
+
+Para subir o ambiente localmente ou em produção:
+
+\begin{lstlisting}[language=bash]
+docker compose up -d --build
+\end{lstlisting}
+
+% =========================================================================
+\section{Reaproveitando o Template para Outro Departamento}
+% =========================================================================
+
+Como o objetivo original do projeto era servir de \emph{modelo} reutilizável, o processo de
+adaptar este mesmo código para outro departamento é deliberadamente simples:
+
+\begin{enumerate}[leftmargin=2em]
+    \item Copiar a pasta \texttt{site/} para o novo projeto.
+    \item Ajustar \texttt{APP\_NAME}, \texttt{ADMIN\_EMAIL} e gerar um novo
+          \texttt{ADMIN\_PASSWORD\_HASH} no \texttt{.env}.
+    \item Subir o contêiner e preencher todo o conteúdo pelo painel \texttt{/admin} — nome,
+          logos, textos, equipe, cursos, contato.
+\end{enumerate}
+
+Não é necessário alterar nenhum arquivo PHP ou Blade para o uso básico: a estrutura de seções já
+cobre o que um site institucional de departamento tipicamente precisa.
+
+% =========================================================================
+\section{Referências}
+% =========================================================================
+
+\begin{itemize}[leftmargin=2em]
+    \item Framework Laravel — \url{https://laravel.com}
+    \item Tema visual base "Neoton" (licença comercial, uso adaptado neste projeto)
+    \item Identidade visual e logomarca: Universidade Federal de Ouro Preto (UFOP)
+\end{itemize}
+
+\end{document}

@@ -81,12 +81,30 @@ Medidas ja implementadas no codigo:
 - **HTTPS opcional**: `FORCE_HTTPS=true` no `.env` redireciona tudo para HTTPS. Fica desligado
   por padrao — so ative depois de confirmar que o dominio final tem certificado configurado,
   senao o site fica inacessivel (loop de redirecionamento).
+- **Antivirus nos uploads (opcional)**: todo arquivo enviado pelo painel (imagens e anexos de
+  noticias/editais) pode ser escaneado por um ClamAV rodando em container separado, via
+  `app/Support/ClamAvScanner.php` (fala direto com o clamd pelo protocolo INSTREAM, sem
+  dependencia PHP extra). Cobre o cenario que a validacao de tipo de arquivo sozinha nao pega:
+  um documento Word/Excel com macro maliciosa que passaria pela validacao normal por ser, de
+  fato, um arquivo daquele tipo.
+  - Ativar: `CLAMAV_ENABLED=true` no `.env` e subir o servico junto:
+    `docker compose --profile clamav up -d --build`.
+  - Na primeira vez, o ClamAV baixa o banco de assinaturas — pode levar alguns minutos ate
+    ficar pronto. Acompanhe com `docker compose logs -f clamav`.
+  - Se o ClamAV cair ou ficar fora do ar depois de ativado, por padrao os uploads continuam
+    funcionando normalmente (so fica registrado um aviso no log) — para bloquear uploads nesse
+    caso em vez de deixar passar, use `CLAMAV_FAIL_CLOSED=true`.
 
 Fora do codigo (vale considerar ao publicar de verdade):
 - Trocar a senha padrao do admin (`Trocar@123`) antes de ir ao ar.
 - Configurar backup regular de `storage/content/` e `storage/uploads/` (sao os unicos dados do
   site — sem banco, sem eles nao ha como recuperar o conteudo).
 - Manter o Laravel e as dependencias do `composer.json` atualizados.
+- Se algum dia rodar comandos `artisan` manualmente dentro do container via `docker exec` (sem
+  passar por `docker compose exec`, que ja roda como o usuario certo), rode depois
+  `docker exec <container> chown -R www-data:www-data storage bootstrap/cache` — comandos
+  executados como root podem deixar arquivos de log/cache com dono errado e quebrar escritas
+  seguintes do Apache.
 
 ## Tema
 

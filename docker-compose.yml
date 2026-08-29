@@ -17,8 +17,29 @@ services:
       ADMIN_PASSWORD_HASH: "${ADMIN_PASSWORD_HASH}"
       # Mude para "true" somente depois que o dominio final tiver HTTPS configurado.
       FORCE_HTTPS: "${FORCE_HTTPS:-false}"
+      # Antivirus nos uploads (opcional) - ver servico "clamav" abaixo.
+      # So funciona de verdade se voce subir tambem com --profile clamav.
+      CLAMAV_ENABLED: "${CLAMAV_ENABLED:-false}"
+      CLAMAV_HOST: clamav
+      CLAMAV_PORT: 3310
     volumes:
       # Conteudo editado pela secretaria e imagens enviadas sobrevivem a rebuilds/deploys.
       - ./storage/content:/var/www/html/storage/app/private/content
       - ./storage/uploads:/var/www/html/storage/app/public/uploads
     restart: unless-stopped
+
+  # Antivirus para os uploads do painel admin (imagens e anexos de noticias/editais).
+  # Desligado por padrao para nao pesar quem nao precisa: so sobe com
+  #   docker compose --profile clamav up -d --build
+  # e so tem efeito se CLAMAV_ENABLED=true no .env. Na primeira vez, baixa o banco
+  # de assinaturas de virus (freshclam) — pode levar alguns minutos ate ficar pronto.
+  clamav:
+    image: clamav/clamav:stable
+    container_name: departamento-clamav
+    profiles: ["clamav"]
+    restart: unless-stopped
+    volumes:
+      - clamav_data:/var/lib/clamav
+
+volumes:
+  clamav_data:

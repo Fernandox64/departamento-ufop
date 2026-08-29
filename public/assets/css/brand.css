@@ -1,0 +1,315 @@
+/*
+ * Paleta de marca (UFOP) — baseada no site oficial ufop.br:
+ * vinho institucional (marca, detalhes), vermelho mais forte (acentos e hover),
+ * grafite/preto (barra principal e rodape) e cinza (bordas, detalhes).
+ */
+:root {
+    --brand-wine: #962038;        /* vinho institucional (mesma faixa do site oficial) */
+    --brand-red-strong: #C8102E;  /* vermelho mais vivo, para acentos e hover */
+    --brand-charcoal: #2B2B2B;    /* grafite/preto das barras principais do site oficial */
+    --brand-gray: #6E6E6E;        /* cinza de apoio (bordas, textos secundarios) */
+    --brand-gray-light: #919191;
+
+    /* Bootstrap usa --bs-primary/--bs-primary-rgb em .text-primary, .btn-primary etc. */
+    --bs-primary: var(--brand-red-strong);
+    --bs-primary-rgb: 200, 16, 46;
+}
+
+/* ---------- Cabecalho (logo + nome + menu + icones, tudo numa linha) ---------- */
+
+.back-header {
+    border-bottom: 3px solid var(--brand-red-strong);
+}
+
+.main-header-bar {
+    background: var(--brand-charcoal);
+    padding: 0.5rem 0;
+}
+.main-header-brand {
+    display: inline-flex;
+}
+.main-header-logo-box {
+    display: inline-flex;
+}
+.main-header-logo-box img {
+    height: 76px;
+    width: auto;
+    display: block;
+}
+.main-header-title {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.main-header-bar .nav-link {
+    color: #fff !important;
+    font-weight: 600;
+    padding: 0.6rem 0.9rem !important;
+}
+.main-header-bar .nav-link:hover {
+    color: var(--brand-red-strong) !important;
+}
+.main-header-bar .header-icons .nav-link {
+    font-size: 1.05rem;
+    padding: 0.4rem 0.6rem !important;
+}
+
+/* ---------- Botoes e titulos ---------- */
+
+.back-btn {
+    background: var(--brand-wine);
+}
+.back-btn:hover {
+    background: var(--brand-red-strong);
+}
+
+.back-title h2:before {
+    background: var(--brand-red-strong);
+    opacity: 1;
+    height: 3px;
+}
+.back-title h2:after {
+    background: var(--brand-gray-light);
+    opacity: 1;
+    height: 3px;
+}
+
+/* ---------- Rodape ---------- */
+
+.back-footer {
+    background-color: var(--brand-charcoal);
+}
+
+/* ---------- Carrossel de imagens da pagina inicial ---------- */
+
+.dept-carousel-slide {
+    position: relative;
+    overflow: hidden;
+}
+.dept-carousel-slide img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+}
+.dept-carousel-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(43, 43, 43, 0.75);
+    color: #fff;
+    padding: 0.85rem 1.5rem;
+    font-weight: 600;
+}
+.dept-carousel .owl-nav button.owl-prev,
+.dept-carousel .owl-nav button.owl-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(43, 43, 43, 0.55) !important;
+    color: #fff !important;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.dept-carousel .owl-nav button.owl-prev { left: 15px; }
+.dept-carousel .owl-nav button.owl-next { right: 15px; }
+.dept-carousel .owl-dots {
+    text-align: center;
+    padding: 0.75rem 0;
+    background: var(--brand-charcoal);
+}
+.dept-carousel .owl-dot span {
+    background: var(--brand-gray-light) !important;
+}
+.dept-carousel .owl-dot.active span {
+    background: var(--brand-red-strong) !important;
+}
+
+/* ---------- Cards de noticias/editais ---------- */
+
+.noticia-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.noticia-card-img {
+    display: block;
+    height: 170px;
+    background: var(--brand-gray-light);
+}
+.noticia-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.noticia-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+}
+.badge.noticia-badge-noticia {
+    background: var(--brand-wine);
+}
+.badge.noticia-badge-edital {
+    background: var(--brand-charcoal);
+}
+
+/* ---------- Eventos ---------- */
+
+.evento-data-badge {
+    background: var(--brand-wine);
+    color: #fff;
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    min-width: 56px;
+    line-height: 1.1;
+}
+.evento-data-dia {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.evento-data-mes {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+.eventos-sidebar {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    padding: 1.25rem;
+}
+.eventos-sidebar .evento-data-badge {
+    min-width: 48px;
+    padding: 0.3rem 0.4rem;
+}
+.eventos-sidebar .evento-data-dia {
+    font-size: 1.05rem;
+}
+
+/* ---------- Faixa hero da pagina inicial ---------- */
+
+.dept-hero {
+    background: var(--brand-wine) !important;
+}
+/* O tema fixa "h1,h2,...{color:#0a0a0a}" e ".lead" herda o cinza escuro do body;
+   como e uma regra direta no elemento, ela vence o "text-white" herdado da
+   section — por isso forcamos a cor branca direto no titulo/subtitulo aqui. */
+.dept-hero h1,
+.dept-hero p {
+    color: #fff !important;
+}
+
+.dept-hero-btn {
+    display: inline-block;
+    padding: 0.85rem 1.75rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    text-decoration: none !important;
+    border: 2px solid #fff;
+    background: transparent;
+    color: #fff !important;
+    transition: background-color .2s ease, color .2s ease;
+}
+.dept-hero-btn:hover {
+    background: #fff;
+    color: var(--brand-wine) !important;
+}
+
+/* ---------- Botao "voltar ao topo" com anel de progresso ---------- */
+
+#backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity .25s ease, transform .25s ease, visibility .25s ease;
+}
+#backToTop.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+#backToTop i {
+    position: relative;
+    z-index: 1;
+    color: var(--brand-wine);
+    font-size: 1.05rem;
+}
+#backToTop:hover i {
+    color: var(--brand-red-strong);
+}
+.back-to-top-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 52px;
+    height: 52px;
+    transform: rotate(-90deg);
+}
+.back-to-top-ring-bg {
+    fill: none;
+    stroke: rgba(0, 0, 0, .08);
+    stroke-width: 3;
+}
+.back-to-top-ring-fill {
+    fill: none;
+    stroke: var(--brand-red-strong);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+/* ---------- Tela de carregamento (preloader) ---------- */
+
+#back__circle_loader {
+    width: 60px !important;
+    height: 60px !important;
+    border-width: 4px !important;
+    border-color: rgba(150, 32, 56, 0.15) !important;
+    border-top-color: var(--brand-wine) !important;
+    -webkit-animation-duration: 0.8s !important;
+    animation-duration: 0.8s !important;
+}
+
+/* ---------- Painel administrativo ---------- */
+
+.admin-topbar {
+    background: var(--brand-charcoal) !important;
+}
+.admin-sidebar a.active {
+    background: rgba(200, 16, 46, 0.1);
+    color: var(--brand-red-strong);
+    font-weight: 600;
+}

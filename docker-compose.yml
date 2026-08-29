@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    container_name: departamento-site
+    ports:
+      - "8097:80"
+    environment:
+      APP_NAME: "Departamento Modelo"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: "http://localhost:8097"
+      APP_KEY: "${APP_KEY}"
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      QUEUE_CONNECTION: sync
+      ADMIN_EMAIL: "${ADMIN_EMAIL}"
+      ADMIN_PASSWORD_HASH: "${ADMIN_PASSWORD_HASH}"
+    volumes:
+      # Conteudo editado pela secretaria e imagens enviadas sobrevivem a rebuilds/deploys.
+      - ./storage/content:/var/www/html/storage/app/private/content
+      - ./storage/uploads:/var/www/html/storage/app/public/uploads
+    restart: unless-stopped

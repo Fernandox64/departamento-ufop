@@ -1,0 +1,10 @@
+vendor/
+node_modules/
+.git/
+.gitignore
+tests/
+storage/content/*
+storage/uploads/*
+storage/logs/*
+docker-compose.yml
+Dockerfile

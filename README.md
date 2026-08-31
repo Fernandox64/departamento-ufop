@@ -13,15 +13,21 @@ docker compose up -d --build
 Site: http://localhost:8097
 Painel admin: http://localhost:8097/admin/login
 
-Credenciais de admin: definidas em `.env` (`ADMIN_EMAIL` / `ADMIN_PASSWORD_HASH`).
-A senha padrao inicial e `Trocar@123` — troque assim que possivel gerando um novo hash:
+Credenciais de admin: definidas em `.env` (`ADMIN_EMAIL` / `ADMIN_PASSWORD_HASH_B64`).
+A senha padrao inicial e `Trocar@123` — troque assim que possivel:
 
 ```bash
-docker compose exec app php artisan tinker --execute="echo Hash::make('nova-senha');"
+docker compose exec app php artisan admin:senha "nova-senha"
 ```
 
-E depois atualize `ADMIN_PASSWORD_HASH` no `.env` (ou nas variaveis de ambiente do deploy) e
-reinicie o container.
+O comando imprime a linha pronta para colar no `.env` (ex.: `ADMIN_PASSWORD_HASH_B64=...`).
+Cole, salve o arquivo e reinicie com `docker compose up -d`.
+
+> **Por que base64 e nao o hash direto?** O hash bcrypt sempre comeca com `$2y$12$...`, e o
+> Docker Compose reinterpreta `$` seguido de letras como se fosse outra variavel de ambiente,
+> truncando o valor silenciosamente (sem erro, so o login para de funcionar). Guardando em
+> base64 esse problema nunca acontece — por isso o comando `admin:senha` faz essa conversao
+> automaticamente, em vez de usar `php artisan tinker` + `Hash::make` diretamente.
 
 ## Estrutura de conteudo
 
@@ -47,7 +53,7 @@ ambiente.
 ## Reaproveitando para um novo departamento
 
 1. Copie esta pasta (`site/`) para o novo projeto.
-2. Ajuste `APP_NAME`, `ADMIN_EMAIL` e gere um novo `ADMIN_PASSWORD_HASH` no `.env`.
+2. Ajuste `APP_NAME`, `ADMIN_EMAIL` e gere uma nova senha no `.env` (`php artisan admin:senha "..."`).
 3. Suba o container e edite todo o conteudo pelo `/admin` (nome, logos, textos, equipe, contato).
 4. Nao ha necessidade de editar Blade/PHP para o uso basico — a estrutura de secoes ja cobre
    o que um site institucional tipico precisa.

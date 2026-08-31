@@ -17,6 +17,17 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.audit' => \App\Http\Middleware\AdminAuditLog::class,
         ]);
 
+        // Necessario quando o site roda atras de um proxy reverso (Nginx, Cloudflare
+        // etc.) que termina o HTTPS antes do container: sem isso, $request->secure()
+        // sempre retorna falso e FORCE_HTTPS=true cria um loop de redirecionamento.
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO,
+        );
+
         $middleware->append(\App\Http\Middleware\EnsureHttps::class);
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })

@@ -5,10 +5,10 @@ services:
     ports:
       - "8097:80"
     environment:
-      APP_NAME: "Departamento Modelo"
+      APP_NAME: "${APP_NAME:-Departamento Modelo}"
       APP_ENV: production
       APP_DEBUG: "false"
-      APP_URL: "http://localhost:8097"
+      APP_URL: "${APP_URL:-http://localhost:8097}"
       APP_KEY: "${APP_KEY}"
       SESSION_DRIVER: file
       CACHE_STORE: file

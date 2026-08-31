@@ -113,16 +113,17 @@ class ContentDefaults
         ];
     }
 
-    public static function equipe(): array
+    public static function pessoal(): array
     {
         return [
-            'titulo' => 'Nossa Equipe',
-            'introducao' => 'Conheca os profissionais que fazem parte do nosso departamento.',
+            'titulo' => 'Pessoal',
+            'introducao' => 'Conheca os docentes e funcionarios que fazem parte do nosso departamento.',
             'membros' => [
-                ['nome' => 'Nome do Servidor', 'cargo' => 'Cargo ou funcao', 'foto' => 'assets/images/team/1.jpg'],
-                ['nome' => 'Nome do Servidor', 'cargo' => 'Cargo ou funcao', 'foto' => 'assets/images/team/2.jpg'],
-                ['nome' => 'Nome do Servidor', 'cargo' => 'Cargo ou funcao', 'foto' => 'assets/images/team/3.jpg'],
+                ['nome' => 'Nome do Docente', 'cargo' => 'Cargo ou funcao', 'categoria' => 'docente', 'foto' => 'assets/images/team/1.jpg'],
+                ['nome' => 'Nome do Docente', 'cargo' => 'Cargo ou funcao', 'categoria' => 'docente', 'foto' => 'assets/images/team/2.jpg'],
+                ['nome' => 'Nome do Funcionario', 'cargo' => 'Cargo ou funcao', 'categoria' => 'funcionario', 'foto' => 'assets/images/team/3.jpg'],
             ],
+            'mostrar_menu' => true,
         ];
     }
 

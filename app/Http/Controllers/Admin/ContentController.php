@@ -25,7 +25,7 @@ class ContentController extends Controller
             ['chave' => 'servicos', 'titulo' => 'Servicos', 'rota' => 'admin.servicos.edit'],
             ['chave' => 'graduacao', 'titulo' => 'Graduacao', 'rota' => 'admin.graduacao.edit'],
             ['chave' => 'pos_graduacao', 'titulo' => 'Pos-Graduacao', 'rota' => 'admin.pos-graduacao.edit'],
-            ['chave' => 'equipe', 'titulo' => 'Equipe', 'rota' => 'admin.equipe.edit'],
+            ['chave' => 'pessoal', 'titulo' => 'Pessoal', 'rota' => 'admin.pessoal.edit'],
             ['chave' => 'contato', 'titulo' => 'Contato', 'rota' => 'admin.contato.edit'],
             ['chave' => 'backup', 'titulo' => 'Backup do site', 'rota' => 'admin.backup.index', 'apenas_administrador' => true],
             ['chave' => 'membros', 'titulo' => 'Membros da equipe', 'rota' => 'admin.membros.index', 'apenas_administrador' => true],
@@ -300,34 +300,37 @@ class ContentController extends Controller
     }
 
     // ---------------------------------------------------------------
-    // Equipe
+    // Pessoal (Docentes / Funcionarios)
     // ---------------------------------------------------------------
 
-    public function equipeEdit()
+    public function pessoalEdit()
     {
-        $content = ContentStore::get('equipe', ContentDefaults::equipe());
+        $content = ContentStore::get('pessoal', ContentDefaults::pessoal());
 
-        return view('admin.sections.equipe', compact('content'));
+        return view('admin.sections.pessoal', compact('content'));
     }
 
-    public function equipeUpdate(Request $request)
+    public function pessoalUpdate(Request $request)
     {
         $data = $request->validate([
             'titulo' => ['required', 'string', 'max:150'],
             'introducao' => ['nullable', 'string', 'max:500'],
+            'mostrar_menu' => ['nullable', 'boolean'],
             'membros' => ['array'],
             'membros.*.nome' => ['nullable', 'string', 'max:100'],
             'membros.*.cargo' => ['nullable', 'string', 'max:100'],
+            'membros.*.categoria' => ['nullable', 'in:docente,funcionario'],
             'membros.*.foto_arquivo' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        $atual = ContentStore::get('equipe', ContentDefaults::equipe());
+        $atual = ContentStore::get('pessoal', ContentDefaults::pessoal());
         $membrosAtuais = $atual['membros'] ?? [];
 
         $membros = [];
         foreach ($data['membros'] ?? [] as $idx => $membro) {
             $nome = trim((string) ($membro['nome'] ?? ''));
             $cargo = trim((string) ($membro['cargo'] ?? ''));
+            $categoria = $membro['categoria'] ?? 'docente';
             $fotoAtual = $membrosAtuais[$idx]['foto'] ?? '';
             $foto = ImageUploader::store($request->file("membros.$idx.foto_arquivo"), $fotoAtual);
 
@@ -335,16 +338,17 @@ class ContentController extends Controller
                 continue;
             }
 
-            $membros[] = ['nome' => $nome, 'cargo' => $cargo, 'foto' => $foto];
+            $membros[] = ['nome' => $nome, 'cargo' => $cargo, 'categoria' => $categoria, 'foto' => $foto];
         }
 
-        ContentStore::save('equipe', [
+        ContentStore::save('pessoal', [
             'titulo' => $data['titulo'],
             'introducao' => $data['introducao'] ?? '',
             'membros' => $membros,
+            'mostrar_menu' => $request->boolean('mostrar_menu'),
         ]);
 
-        return back()->with('status', 'Equipe atualizada com sucesso.');
+        return back()->with('status', 'Pessoal atualizado com sucesso.');
     }
 
     // ---------------------------------------------------------------

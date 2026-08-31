@@ -12,6 +12,9 @@
             @if($content['introducao'])
                 <p class="lead text-center col-lg-8 mx-auto mb-5">{{ $content['introducao'] }}</p>
             @endif
+            @if(empty($content['membros']))
+                <p class="text-center text-muted">Nenhum membro cadastrado nesta categoria ainda.</p>
+            @endif
             <div class="row g-4">
                 @foreach($content['membros'] as $membro)
                     <div class="col-lg-4 col-md-6">

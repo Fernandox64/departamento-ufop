@@ -35,7 +35,10 @@
                     if (!empty($menuEventosVisivel)) {
                         $linksRapidos[] = ['label' => 'Eventos', 'url' => route('eventos.index')];
                     }
-                    $linksRapidos[] = ['label' => 'Equipe', 'url' => route('equipe')];
+                    if (!empty($menuPessoal['mostrar_menu'])) {
+                        $linksRapidos[] = ['label' => 'Docentes', 'url' => route('pessoal.docentes')];
+                        $linksRapidos[] = ['label' => 'Funcionarios', 'url' => route('pessoal.funcionarios')];
+                    }
                     $linksRapidos[] = ['label' => 'Contato', 'url' => route('contato')];
 
                     $colunasLinks = count($linksRapidos) > 5

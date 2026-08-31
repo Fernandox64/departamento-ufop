@@ -27,7 +27,15 @@
                     @if($menuEventosVisivel)
                         <li class="nav-item"><a class="nav-link" href="{{ route('eventos.index') }}">Eventos</a></li>
                     @endif
-                    <li class="nav-item"><a class="nav-link" href="{{ route('equipe') }}">Equipe</a></li>
+                    @if(!empty($menuPessoal['mostrar_menu']))
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="menuPessoalDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pessoal</a>
+                            <ul class="dropdown-menu" aria-labelledby="menuPessoalDropdown">
+                                <li><a class="dropdown-item" href="{{ route('pessoal.docentes') }}">Docentes</a></li>
+                                <li><a class="dropdown-item" href="{{ route('pessoal.funcionarios') }}">Funcionarios</a></li>
+                            </ul>
+                        </li>
+                    @endif
                     <li class="nav-item"><a class="nav-link" href="{{ route('contato') }}">Contato</a></li>
                 </ul>
 

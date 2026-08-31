@@ -48,11 +48,26 @@ class SiteController extends Controller
         return view('site.pos-graduacao', compact('content'));
     }
 
-    public function equipe()
+    public function pessoalDocentes()
     {
-        $content = ContentStore::get('equipe', ContentDefaults::equipe());
+        return $this->pessoalPorCategoria('docente', 'Docentes');
+    }
 
-        return view('site.equipe', compact('content'));
+    public function pessoalFuncionarios()
+    {
+        return $this->pessoalPorCategoria('funcionario', 'Funcionarios');
+    }
+
+    protected function pessoalPorCategoria(string $categoria, string $tituloPagina)
+    {
+        $content = ContentStore::get('pessoal', ContentDefaults::pessoal());
+        $content['membros'] = array_values(array_filter(
+            $content['membros'],
+            fn ($membro) => ($membro['categoria'] ?? 'docente') === $categoria
+        ));
+        $content['titulo'] = $tituloPagina;
+
+        return view('site.pessoal', compact('content'));
     }
 
     public function contato()

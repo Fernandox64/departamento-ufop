@@ -62,7 +62,7 @@ Cada pagina tem um arquivo JSON proprio, com valores padrao definidos em
 - `sobre.json` — texto e imagem da pagina "Sobre o Departamento".
 - `servicos.json` — lista de servicos oferecidos.
 - `graduacao.json` / `pos_graduacao.json` — lista de cursos/programas (nome + link) de cada pagina, com um campo `mostrar_menu` que liga/desliga o item correspondente no menu principal sem remover a pagina do ar.
-- `equipe.json` — lista de membros da equipe (nome, cargo, foto).
+- `pessoal.json` — lista de docentes e funcionarios (nome, cargo, categoria, foto), com um campo `mostrar_menu` que liga/desliga o menu "Pessoal" (dropdown com Docentes/Funcionarios) sem remover as paginas do ar.
 - `contato.json` — endereco, telefones, e-mails e link do mapa.
 
 Tudo isso e editado pelo painel `/admin`, sem precisar mexer em codigo. Nao ha cadastro de

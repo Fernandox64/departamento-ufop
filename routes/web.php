@@ -16,7 +16,8 @@ Route::get('/sobre', [SiteController::class, 'sobre'])->name('sobre');
 Route::get('/servicos', [SiteController::class, 'servicos'])->name('servicos');
 Route::get('/graduacao', [SiteController::class, 'graduacao'])->name('graduacao');
 Route::get('/pos-graduacao', [SiteController::class, 'posGraduacao'])->name('pos-graduacao');
-Route::get('/equipe', [SiteController::class, 'equipe'])->name('equipe');
+Route::get('/pessoal/docentes', [SiteController::class, 'pessoalDocentes'])->name('pessoal.docentes');
+Route::get('/pessoal/funcionarios', [SiteController::class, 'pessoalFuncionarios'])->name('pessoal.funcionarios');
 Route::get('/contato', [SiteController::class, 'contato'])->name('contato');
 
 Route::get('/noticias', [NoticiaController::class, 'index'])->name('noticias.index');
@@ -71,8 +72,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/pos-graduacao', [AdminContentController::class, 'posGraduacaoEdit'])->name('pos-graduacao.edit');
         Route::post('/pos-graduacao', [AdminContentController::class, 'posGraduacaoUpdate'])->name('pos-graduacao.update');
 
-        Route::get('/equipe', [AdminContentController::class, 'equipeEdit'])->name('equipe.edit');
-        Route::post('/equipe', [AdminContentController::class, 'equipeUpdate'])->name('equipe.update');
+        Route::get('/pessoal', [AdminContentController::class, 'pessoalEdit'])->name('pessoal.edit');
+        Route::post('/pessoal', [AdminContentController::class, 'pessoalUpdate'])->name('pessoal.update');
 
         Route::get('/contato', [AdminContentController::class, 'contatoEdit'])->name('contato.edit');
         Route::post('/contato', [AdminContentController::class, 'contatoUpdate'])->name('contato.update');

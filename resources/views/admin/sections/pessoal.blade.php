@@ -1,9 +1,9 @@
 @extends('admin.layout')
 
 @section('content')
-    <h1 class="h4 mb-4">Equipe</h1>
+    <h1 class="h4 mb-4">Pessoal</h1>
 
-    <form method="POST" action="{{ route('admin.equipe.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.pessoal.update') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="row g-3 mb-4">
@@ -11,13 +11,24 @@
                 <label class="form-label">Titulo da pagina</label>
                 <input type="text" name="titulo" class="form-control" value="{{ old('titulo', $content['titulo']) }}" required>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="form-check">
+                    <input type="checkbox" name="mostrar_menu" value="1" class="form-check-input" id="mostrar_menu" @checked(old('mostrar_menu', $content['mostrar_menu']))>
+                    <label class="form-check-label" for="mostrar_menu">Mostrar "Pessoal" no menu principal</label>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <label class="form-label">Texto de introducao</label>
                 <textarea name="introducao" class="form-control" rows="2">{{ old('introducao', $content['introducao']) }}</textarea>
             </div>
         </div>
 
-        <h2 class="h6 mb-3">Membros da equipe</h2>
+        <p class="text-muted small">
+            O menu "Pessoal" no site exibe um submenu com "Docentes" e "Funcionarios", cada um
+            mostrando so as pessoas da categoria correspondente cadastradas abaixo.
+        </p>
+
+        <h2 class="h6 mb-3">Pessoas cadastradas</h2>
 
         <div id="membros-wrap">
             @foreach($content['membros'] as $i => $membro)
@@ -34,9 +45,16 @@
                             <label class="form-label">Cargo / funcao</label>
                             <input type="text" name="membros[{{ $i }}][cargo]" class="form-control" value="{{ $membro['cargo'] }}">
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Nova foto (opcional)</label>
-                            <input type="file" name="membros[{{ $i }}][foto_arquivo]" class="form-control" accept="image/*">
+                        <div class="col-md-2">
+                            <label class="form-label">Categoria</label>
+                            <select name="membros[{{ $i }}][categoria]" class="form-select">
+                                <option value="docente" @selected(($membro['categoria'] ?? 'docente') === 'docente')>Docente</option>
+                                <option value="funcionario" @selected(($membro['categoria'] ?? '') === 'funcionario')>Funcionario</option>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Foto</label>
+                            <input type="file" name="membros[{{ $i }}][foto_arquivo]" class="form-control form-control-sm" accept="image/*">
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-outline-danger w-100 remove-row">X</button>
@@ -46,7 +64,7 @@
             @endforeach
         </div>
 
-        <button type="button" id="add-membro" class="btn btn-outline-secondary btn-sm mb-4">+ Adicionar membro</button>
+        <button type="button" id="add-membro" class="btn btn-outline-secondary btn-sm mb-4">+ Adicionar pessoa</button>
 
         <template id="membro-template">
             <div class="repeat-row">
@@ -60,9 +78,16 @@
                         <label class="form-label">Cargo / funcao</label>
                         <input type="text" name="membros[__INDEX__][cargo]" class="form-control">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Categoria</label>
+                        <select name="membros[__INDEX__][categoria]" class="form-select">
+                            <option value="docente">Docente</option>
+                            <option value="funcionario">Funcionario</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
                         <label class="form-label">Foto</label>
-                        <input type="file" name="membros[__INDEX__][foto_arquivo]" class="form-control" accept="image/*">
+                        <input type="file" name="membros[__INDEX__][foto_arquivo]" class="form-control form-control-sm" accept="image/*">
                     </div>
                     <div class="col-md-1">
                         <button type="button" class="btn btn-outline-danger w-100 remove-row">X</button>
@@ -83,7 +108,7 @@
             const wrap = document.getElementById('membros-wrap');
             const tpl = document.getElementById('membro-template');
             // Contador que so cresce, nunca reaproveita indice de uma linha removida
-            // (evita colidir com o indice de outro membro e apagar a foto dele).
+            // (evita colidir com o indice de outra pessoa e apagar a foto dela).
             let nextIndex = {{ count($content['membros']) }};
 
             document.getElementById('add-membro').addEventListener('click', function () {

@@ -56,7 +56,7 @@
                 <a href="{{ route('admin.servicos.edit') }}" class="{{ request()->routeIs('admin.servicos.*') ? 'active' : '' }}">Servicos</a>
                 <a href="{{ route('admin.graduacao.edit') }}" class="{{ request()->routeIs('admin.graduacao.*') ? 'active' : '' }}">Graduacao</a>
                 <a href="{{ route('admin.pos-graduacao.edit') }}" class="{{ request()->routeIs('admin.pos-graduacao.*') ? 'active' : '' }}">Pos-Graduacao</a>
-                <a href="{{ route('admin.equipe.edit') }}" class="{{ request()->routeIs('admin.equipe.*') ? 'active' : '' }}">Equipe</a>
+                <a href="{{ route('admin.pessoal.edit') }}" class="{{ request()->routeIs('admin.pessoal.*') ? 'active' : '' }}">Pessoal</a>
                 <a href="{{ route('admin.contato.edit') }}" class="{{ request()->routeIs('admin.contato.*') ? 'active' : '' }}">Contato</a>
                 @if(session('admin_nivel') === 'administrador')
                     <hr>

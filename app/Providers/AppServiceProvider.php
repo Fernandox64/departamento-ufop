@@ -41,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('menuGraduacao', ContentStore::get('graduacao', ContentDefaults::graduacao()));
             $view->with('menuPosGraduacao', ContentStore::get('pos_graduacao', ContentDefaults::posGraduacao()));
             $view->with('menuEventosVisivel', EventoStore::mostrarMenu());
+            $view->with('menuPessoal', ContentStore::get('pessoal', ContentDefaults::pessoal()));
         });
     }
 }

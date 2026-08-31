@@ -15,8 +15,8 @@ RUN { \
       echo 'error_reporting=E_ALL & ~E_DEPRECATED & ~E_STRICT'; \
       echo 'log_errors=On'; \
       echo 'default_charset=UTF-8'; \
-      echo 'upload_max_filesize=12M'; \
-      echo 'post_max_size=12M'; \
+      echo 'upload_max_filesize=60M'; \
+      echo 'post_max_size=65M'; \
     } > /usr/local/etc/php/conf.d/zz-local.ini
 
 RUN { \

@@ -25,6 +25,7 @@ class ContentController extends Controller
             ['chave' => 'pos_graduacao', 'titulo' => 'Pos-Graduacao', 'rota' => 'admin.pos-graduacao.edit'],
             ['chave' => 'equipe', 'titulo' => 'Equipe', 'rota' => 'admin.equipe.edit'],
             ['chave' => 'contato', 'titulo' => 'Contato', 'rota' => 'admin.contato.edit'],
+            ['chave' => 'backup', 'titulo' => 'Backup do site', 'rota' => 'admin.backup.index'],
         ];
 
         return view('admin.dashboard', compact('secoes'));

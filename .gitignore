@@ -28,6 +28,11 @@
 !/storage/content/.gitkeep
 /storage/uploads/*
 !/storage/uploads/.gitkeep
+
+# Copia de seguranca automatica gerada no servidor antes de uma restauracao de
+# backup (ver app/Support/BackupManager.php) - nunca deve ir para o git.
+/storage/backups-seguranca/*
+!/storage/backups-seguranca/.gitkeep
 /vendor
 _ide_helper.php
 Homestead.json

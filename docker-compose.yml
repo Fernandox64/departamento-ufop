@@ -26,6 +26,10 @@ services:
       # Conteudo editado pela secretaria e imagens enviadas sobrevivem a rebuilds/deploys.
       - ./storage/content:/var/www/html/storage/app/private/content
       - ./storage/uploads:/var/www/html/storage/app/public/uploads
+      # Copia de seguranca automatica, criada no servidor logo antes de qualquer
+      # restauracao de backup (rede extra contra restaurar o arquivo errado por
+      # engano) - nao substitui os backups baixados pelo admin no painel.
+      - ./storage/backups-seguranca:/var/www/html/storage/app/private/backups-seguranca
     restart: unless-stopped
 
   # Antivirus para os uploads do painel admin (imagens e anexos de noticias/editais).

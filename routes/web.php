@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BackupController as AdminBackupController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\EventoController as AdminEventoController;
 use App\Http\Controllers\Admin\NoticiaController as AdminNoticiaController;
@@ -74,5 +75,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/eventos/{id}/editar', [AdminEventoController::class, 'edit'])->name('eventos.edit');
         Route::put('/eventos/{id}', [AdminEventoController::class, 'update'])->name('eventos.update');
         Route::delete('/eventos/{id}', [AdminEventoController::class, 'destroy'])->name('eventos.destroy');
+
+        Route::get('/backup', [AdminBackupController::class, 'index'])->name('backup.index');
+        Route::get('/backup/download', [AdminBackupController::class, 'download'])->name('backup.download');
+        Route::post('/backup/restore', [AdminBackupController::class, 'restore'])->name('backup.restore');
     });
 });

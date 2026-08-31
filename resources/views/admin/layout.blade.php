@@ -48,6 +48,8 @@
                 <a href="{{ route('admin.pos-graduacao.edit') }}" class="{{ request()->routeIs('admin.pos-graduacao.*') ? 'active' : '' }}">Pos-Graduacao</a>
                 <a href="{{ route('admin.equipe.edit') }}" class="{{ request()->routeIs('admin.equipe.*') ? 'active' : '' }}">Equipe</a>
                 <a href="{{ route('admin.contato.edit') }}" class="{{ request()->routeIs('admin.contato.*') ? 'active' : '' }}">Contato</a>
+                <hr>
+                <a href="{{ route('admin.backup.index') }}" class="{{ request()->routeIs('admin.backup.*') ? 'active' : '' }}">Backup do site</a>
             </div>
             <div class="col-lg-10">
                 @if(session('status'))

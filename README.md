@@ -97,14 +97,39 @@ Medidas ja implementadas no codigo:
 
 Fora do codigo (vale considerar ao publicar de verdade):
 - Trocar a senha padrao do admin (`Trocar@123`) antes de ir ao ar.
-- Configurar backup regular de `storage/content/` e `storage/uploads/` (sao os unicos dados do
-  site — sem banco, sem eles nao ha como recuperar o conteudo).
 - Manter o Laravel e as dependencias do `composer.json` atualizados.
 - Se algum dia rodar comandos `artisan` manualmente dentro do container via `docker exec` (sem
   passar por `docker compose exec`, que ja roda como o usuario certo), rode depois
   `docker exec <container> chown -R www-data:www-data storage bootstrap/cache` — comandos
   executados como root podem deixar arquivos de log/cache com dono errado e quebrar escritas
   seguintes do Apache.
+
+## Backup
+
+Como o site nao usa banco de dados, todo o "dado" dele e `storage/content/*.json` +
+`storage/uploads/`. O painel `/admin/backup` cobre a forma mais simples de se proteger contra uma
+invasao: **baixar uma copia pro seu proprio computador e usa-la pra restaurar o site depois, se
+precisar.**
+
+- **Baixar backup completo agora**: gera na hora um `.zip` com todo o conteudo (`content/` +
+  `uploads/`) e baixa direto pro navegador do admin. Nada fica guardado no servidor depois do
+  download. Recomendado repetir isso periodicamente e sempre apos mudancas importantes — guarde
+  os arquivos fora do servidor (pendrive, nuvem pessoal, e-mail para si mesmo etc.), porque um
+  backup que mora no mesmo servidor que pode ser invadido nao protege contra invasao.
+- **Restaurar a partir de um backup**: o admin reenvia um desses `.zip` pelo painel; o sistema
+  substitui totalmente `storage/content/` e `storage/uploads/` pelo conteudo do arquivo
+  (`app/Support/BackupManager.php`). Passa pelo mesmo antivirus (ClamAV, quando ligado) que os
+  demais uploads do site, e valida a estrutura interna do zip contra "zip slip" (entradas tentando
+  escapar da pasta de destino) antes de extrair qualquer coisa.
+- **Rede de seguranca extra**: antes de qualquer restauracao, o sistema cria automaticamente uma
+  copia do estado atual em `storage/backups-seguranca/` (fora do alcance da web, persistida por
+  volume Docker) — protege contra restaurar o arquivo errado por engano. Isso e um complemento,
+  nao substitui manter seus proprios backups baixados.
+
+Isso resolve o cenario "o site foi invadido, preciso voltar para uma versao boa conhecida" sem
+depender de nenhum servidor externo. Um proximo passo natural (nao implementado ainda) seria um
+historico automatico de versoes (ex.: Git) com restauracao de um clique direto pelo painel, para
+nao depender de o admin ter feito o download manualmente antes do incidente.
 
 ## Tema
 

@@ -75,7 +75,7 @@ class MembroController extends Controller
         $validated = $request->validate([
             'nome' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email', 'max:180'],
-            'nivel' => ['required', 'in:administrador,secretaria'],
+            'nivel' => ['required', 'in:administrador,secretaria,bolsista'],
             'senha' => [$novo ? 'required' : 'nullable', 'string', 'min:8'],
         ]);
 

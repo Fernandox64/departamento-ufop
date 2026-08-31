@@ -32,13 +32,17 @@ Cole, salve o arquivo e reinicie com `docker compose up -d`.
 ## Membros da equipe e niveis de permissao
 
 Alem da conta raiz do `.env` (sempre nivel administrador), o painel em `/admin/membros`
-(visivel so para administradores) permite cadastrar outras contas com dois niveis:
+(visivel so para administradores) permite cadastrar outras contas com tres niveis:
 
 - **Administrador**: acesso total — todas as secoes de conteudo, Configuracoes gerais, Backup
   e a propria tela de Membros.
-- **Secretaria**: edita o conteudo do site (noticias, eventos, home, carrossel, sobre, servicos,
-  graduacao/pos-graduacao, equipe, contato, rodape), mas nao acessa Configuracoes gerais, Backup
-  nem Membros — tanto o menu quanto o acesso direto pela URL sao bloqueados (403).
+- **Secretaria** e **Bolsista**: editam o conteudo do site (noticias, eventos, home, carrossel,
+  sobre, servicos, graduacao/pos-graduacao, equipe, contato, rodape), mas nao acessam
+  Configuracoes gerais, Backup nem Membros — tanto o menu quanto o acesso direto pela URL sao
+  bloqueados (403). Por enquanto os dois niveis tem exatamente o mesmo acesso — a distincao serve
+  so para identificar o cargo da pessoa na lista de membros; da pra restringir mais um dos dois
+  depois, se for preciso (o `nivel` de cada membro fica salvo no JSON, so falta alterar a checagem
+  em `app/Http/Middleware/EnsureAdminIsAdministrador.php` e nas rotas para diferencia-los).
 
 Guardado em `storage/app/private/content/membros.json` (mesmo padrao de noticias/eventos), com
 senha em bcrypt. Uma conta nao pode excluir a si mesma pelo painel (evita ficar sem acesso por

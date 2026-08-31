@@ -24,6 +24,7 @@
                 <label class="form-label">Nivel de permissao</label>
                 <select name="nivel" class="form-select" required>
                     <option value="secretaria" @selected(old('nivel', $item['nivel'] ?? 'secretaria') === 'secretaria')>Secretaria (edita o conteudo do site)</option>
+                    <option value="bolsista" @selected(old('nivel', $item['nivel'] ?? '') === 'bolsista')>Bolsista (edita o conteudo do site)</option>
                     <option value="administrador" @selected(old('nivel', $item['nivel'] ?? '') === 'administrador')>Administrador (acesso total)</option>
                 </select>
             </div>

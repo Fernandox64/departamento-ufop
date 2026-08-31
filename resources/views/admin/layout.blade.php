@@ -26,7 +26,9 @@
                 @if(session('admin_nome'))
                     <span class="text-white-50 small me-2">
                         {{ session('admin_nome') }}
-                        <span class="badge {{ session('admin_nivel') === 'administrador' ? 'bg-danger' : 'bg-secondary' }}">{{ session('admin_nivel') === 'administrador' ? 'Administrador' : 'Secretaria' }}</span>
+                        <span class="badge {{ match(session('admin_nivel')) { 'administrador' => 'bg-danger', 'secretaria' => 'bg-secondary', default => 'bg-info' } }}">
+                            {{ match(session('admin_nivel')) { 'administrador' => 'Administrador', 'secretaria' => 'Secretaria', default => 'Bolsista' } }}
+                        </span>
                     </span>
                 @endif
                 <a href="{{ route('home') }}" target="_blank" class="btn btn-outline-light btn-sm">Ver site</a>

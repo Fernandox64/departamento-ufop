@@ -8,8 +8,9 @@
 
     <p class="text-muted">
         <strong>Administrador</strong>: acesso total (todas as secoes, backup/restauracao e gerenciar membros).
-        <strong>Secretaria</strong>: pode editar o conteudo do site (noticias, eventos, paginas etc.), mas nao
-        acessa configuracoes gerais, backup nem esta tela de membros.
+        <strong>Secretaria</strong> e <strong>Bolsista</strong>: podem editar o conteudo do site (noticias,
+        eventos, paginas etc.), mas nao acessam configuracoes gerais, backup nem esta tela de membros
+        (por enquanto os dois niveis tem o mesmo acesso — e so para diferenciar o cargo da pessoa).
     </p>
 
     @if(empty($items))
@@ -31,8 +32,8 @@
                             <td>{{ $item['nome'] }}</td>
                             <td>{{ $item['email'] }}</td>
                             <td>
-                                <span class="badge {{ $item['nivel'] === 'administrador' ? 'bg-danger' : 'bg-secondary' }}">
-                                    {{ $item['nivel'] === 'administrador' ? 'Administrador' : 'Secretaria' }}
+                                <span class="badge {{ match($item['nivel']) { 'administrador' => 'bg-danger', 'secretaria' => 'bg-secondary', default => 'bg-info' } }}">
+                                    {{ match($item['nivel']) { 'administrador' => 'Administrador', 'secretaria' => 'Secretaria', default => 'Bolsista' } }}
                                 </span>
                             </td>
                             <td class="text-end">

@@ -12,8 +12,10 @@ class ContentController extends Controller
 {
     public function dashboard()
     {
+        $administrador = session('admin_nivel') === 'administrador';
+
         $secoes = [
-            ['chave' => 'configuracoes', 'titulo' => 'Configuracoes gerais', 'rota' => 'admin.configuracoes.edit'],
+            ['chave' => 'configuracoes', 'titulo' => 'Configuracoes gerais', 'rota' => 'admin.configuracoes.edit', 'apenas_administrador' => true],
             ['chave' => 'rodape', 'titulo' => 'Rodape do site', 'rota' => 'admin.rodape.edit'],
             ['chave' => 'home', 'titulo' => 'Pagina inicial', 'rota' => 'admin.home.edit'],
             ['chave' => 'carrossel', 'titulo' => 'Carrossel de imagens', 'rota' => 'admin.carrossel.edit'],
@@ -25,8 +27,14 @@ class ContentController extends Controller
             ['chave' => 'pos_graduacao', 'titulo' => 'Pos-Graduacao', 'rota' => 'admin.pos-graduacao.edit'],
             ['chave' => 'equipe', 'titulo' => 'Equipe', 'rota' => 'admin.equipe.edit'],
             ['chave' => 'contato', 'titulo' => 'Contato', 'rota' => 'admin.contato.edit'],
-            ['chave' => 'backup', 'titulo' => 'Backup do site', 'rota' => 'admin.backup.index'],
+            ['chave' => 'backup', 'titulo' => 'Backup do site', 'rota' => 'admin.backup.index', 'apenas_administrador' => true],
+            ['chave' => 'membros', 'titulo' => 'Membros da equipe', 'rota' => 'admin.membros.index', 'apenas_administrador' => true],
         ];
+
+        $secoes = array_values(array_filter(
+            $secoes,
+            fn ($secao) => $administrador || empty($secao['apenas_administrador'])
+        ));
 
         return view('admin.dashboard', compact('secoes'));
     }

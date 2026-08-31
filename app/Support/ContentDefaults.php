@@ -4,6 +4,11 @@ namespace App\Support;
 
 class ContentDefaults
 {
+    public static function membros(): array
+    {
+        return ['items' => []];
+    }
+
     public static function configuracoes(): array
     {
         return [

@@ -29,6 +29,21 @@ Cole, salve o arquivo e reinicie com `docker compose up -d`.
 > base64 esse problema nunca acontece — por isso o comando `admin:senha` faz essa conversao
 > automaticamente, em vez de usar `php artisan tinker` + `Hash::make` diretamente.
 
+## Membros da equipe e niveis de permissao
+
+Alem da conta raiz do `.env` (sempre nivel administrador), o painel em `/admin/membros`
+(visivel so para administradores) permite cadastrar outras contas com dois niveis:
+
+- **Administrador**: acesso total — todas as secoes de conteudo, Configuracoes gerais, Backup
+  e a propria tela de Membros.
+- **Secretaria**: edita o conteudo do site (noticias, eventos, home, carrossel, sobre, servicos,
+  graduacao/pos-graduacao, equipe, contato, rodape), mas nao acessa Configuracoes gerais, Backup
+  nem Membros — tanto o menu quanto o acesso direto pela URL sao bloqueados (403).
+
+Guardado em `storage/app/private/content/membros.json` (mesmo padrao de noticias/eventos), com
+senha em bcrypt. Uma conta nao pode excluir a si mesma pelo painel (evita ficar sem acesso por
+engano) — se precisar remover a propria conta, peça para outro administrador fazer isso.
+
 ## Estrutura de conteudo
 
 Cada pagina tem um arquivo JSON proprio, com valores padrao definidos em

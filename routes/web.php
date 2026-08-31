@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BackupController as AdminBackupController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\EventoController as AdminEventoController;
+use App\Http\Controllers\Admin\MembroController as AdminMembroController;
 use App\Http\Controllers\Admin\NoticiaController as AdminNoticiaController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\NoticiaController;
@@ -31,8 +32,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['admin.auth', 'admin.audit'])->group(function () {
         Route::get('/', [AdminContentController::class, 'dashboard'])->name('dashboard');
 
-        Route::get('/configuracoes', [AdminContentController::class, 'configuracoesEdit'])->name('configuracoes.edit');
-        Route::post('/configuracoes', [AdminContentController::class, 'configuracoesUpdate'])->name('configuracoes.update');
+        // Areas restritas ao nivel "administrador": configuracoes sensiveis, backup/restauracao
+        // e gerenciamento dos proprios membros da equipe (ver app/Http/Middleware/EnsureAdminIsAdministrador.php).
+        Route::middleware('admin.administrador')->group(function () {
+            Route::get('/configuracoes', [AdminContentController::class, 'configuracoesEdit'])->name('configuracoes.edit');
+            Route::post('/configuracoes', [AdminContentController::class, 'configuracoesUpdate'])->name('configuracoes.update');
+
+            Route::get('/backup', [AdminBackupController::class, 'index'])->name('backup.index');
+            Route::get('/backup/download', [AdminBackupController::class, 'download'])->name('backup.download');
+            Route::post('/backup/restore', [AdminBackupController::class, 'restore'])->name('backup.restore');
+
+            Route::get('/membros', [AdminMembroController::class, 'index'])->name('membros.index');
+            Route::get('/membros/criar', [AdminMembroController::class, 'create'])->name('membros.create');
+            Route::post('/membros', [AdminMembroController::class, 'store'])->name('membros.store');
+            Route::get('/membros/{id}/editar', [AdminMembroController::class, 'edit'])->name('membros.edit');
+            Route::put('/membros/{id}', [AdminMembroController::class, 'update'])->name('membros.update');
+            Route::delete('/membros/{id}', [AdminMembroController::class, 'destroy'])->name('membros.destroy');
+        });
 
         Route::get('/rodape', [AdminContentController::class, 'rodapeEdit'])->name('rodape.edit');
         Route::post('/rodape', [AdminContentController::class, 'rodapeUpdate'])->name('rodape.update');
@@ -75,9 +91,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/eventos/{id}/editar', [AdminEventoController::class, 'edit'])->name('eventos.edit');
         Route::put('/eventos/{id}', [AdminEventoController::class, 'update'])->name('eventos.update');
         Route::delete('/eventos/{id}', [AdminEventoController::class, 'destroy'])->name('eventos.destroy');
-
-        Route::get('/backup', [AdminBackupController::class, 'index'])->name('backup.index');
-        Route::get('/backup/download', [AdminBackupController::class, 'download'])->name('backup.download');
-        Route::post('/backup/restore', [AdminBackupController::class, 'restore'])->name('backup.restore');
     });
 });

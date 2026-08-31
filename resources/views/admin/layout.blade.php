@@ -22,7 +22,13 @@
     <nav class="navbar navbar-dark admin-topbar mb-4">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1">Painel administrativo - {{ $siteSettings['nome_site'] }}</span>
-            <div class="d-flex gap-2">
+            <div class="d-flex align-items-center gap-2">
+                @if(session('admin_nome'))
+                    <span class="text-white-50 small me-2">
+                        {{ session('admin_nome') }}
+                        <span class="badge {{ session('admin_nivel') === 'administrador' ? 'bg-danger' : 'bg-secondary' }}">{{ session('admin_nivel') === 'administrador' ? 'Administrador' : 'Secretaria' }}</span>
+                    </span>
+                @endif
                 <a href="{{ route('home') }}" target="_blank" class="btn btn-outline-light btn-sm">Ver site</a>
                 <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
                     @csrf
@@ -36,7 +42,9 @@
         <div class="row">
             <div class="col-lg-2 admin-sidebar mb-4">
                 <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Painel</a>
-                <a href="{{ route('admin.configuracoes.edit') }}" class="{{ request()->routeIs('admin.configuracoes.*') ? 'active' : '' }}">Configuracoes gerais</a>
+                @if(session('admin_nivel') === 'administrador')
+                    <a href="{{ route('admin.configuracoes.edit') }}" class="{{ request()->routeIs('admin.configuracoes.*') ? 'active' : '' }}">Configuracoes gerais</a>
+                @endif
                 <a href="{{ route('admin.rodape.edit') }}" class="{{ request()->routeIs('admin.rodape.*') ? 'active' : '' }}">Rodape do site</a>
                 <a href="{{ route('admin.home.edit') }}" class="{{ request()->routeIs('admin.home.*') ? 'active' : '' }}">Pagina inicial</a>
                 <a href="{{ route('admin.carrossel.edit') }}" class="{{ request()->routeIs('admin.carrossel.*') ? 'active' : '' }}">Carrossel de imagens</a>
@@ -48,8 +56,11 @@
                 <a href="{{ route('admin.pos-graduacao.edit') }}" class="{{ request()->routeIs('admin.pos-graduacao.*') ? 'active' : '' }}">Pos-Graduacao</a>
                 <a href="{{ route('admin.equipe.edit') }}" class="{{ request()->routeIs('admin.equipe.*') ? 'active' : '' }}">Equipe</a>
                 <a href="{{ route('admin.contato.edit') }}" class="{{ request()->routeIs('admin.contato.*') ? 'active' : '' }}">Contato</a>
-                <hr>
-                <a href="{{ route('admin.backup.index') }}" class="{{ request()->routeIs('admin.backup.*') ? 'active' : '' }}">Backup do site</a>
+                @if(session('admin_nivel') === 'administrador')
+                    <hr>
+                    <a href="{{ route('admin.backup.index') }}" class="{{ request()->routeIs('admin.backup.*') ? 'active' : '' }}">Backup do site</a>
+                    <a href="{{ route('admin.membros.index') }}" class="{{ request()->routeIs('admin.membros.*') ? 'active' : '' }}">Membros da equipe</a>
+                @endif
             </div>
             <div class="col-lg-10">
                 @if(session('status'))

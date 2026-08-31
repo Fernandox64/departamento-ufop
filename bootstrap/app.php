@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\EnsureAdminAuthenticated::class,
             'admin.audit' => \App\Http\Middleware\AdminAuditLog::class,
+            'admin.administrador' => \App\Http\Middleware\EnsureAdminIsAdministrador::class,
         ]);
 
         // Necessario quando o site roda atras de um proxy reverso (Nginx, Cloudflare

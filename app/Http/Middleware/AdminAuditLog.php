@@ -23,7 +23,8 @@ class AdminAuditLog
                 'rota' => $request->route()?->getName(),
                 'metodo' => $request->method(),
                 'ip' => $request->ip(),
-                'admin' => config('admin.email'),
+                'admin' => $request->session()->get('admin_email'),
+                'nivel' => $request->session()->get('admin_nivel'),
             ]);
         }
 

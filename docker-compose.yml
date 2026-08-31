@@ -2,24 +2,25 @@ services:
   app:
     build: .
     container_name: departamento-site
+    # Le o .env diretamente (sem passar pela interpolacao "${VAR}" do Compose).
+    # Importante: hashes bcrypt (ADMIN_PASSWORD_HASH) contem "$" seguido de letras
+    # (ex.: "$2y$12$hgAqO2V0..."), e o Compose tenta reinterpretar isso como uma
+    # variavel quando o valor passa por "${ADMIN_PASSWORD_HASH}" na secao
+    # "environment" abaixo — o resultado e o hash chegar truncado/vazio no
+    # container. Com "env_file" isso nao acontece, o valor vai literal.
+    env_file:
+      - .env
     ports:
       - "8097:80"
     environment:
-      APP_NAME: "${APP_NAME:-Departamento Modelo}"
+      # Forcado aqui independente do .env: o container roda sempre como producao.
       APP_ENV: production
       APP_DEBUG: "false"
-      APP_URL: "${APP_URL:-http://localhost:8097}"
-      APP_KEY: "${APP_KEY}"
       SESSION_DRIVER: file
       CACHE_STORE: file
       QUEUE_CONNECTION: sync
-      ADMIN_EMAIL: "${ADMIN_EMAIL}"
-      ADMIN_PASSWORD_HASH: "${ADMIN_PASSWORD_HASH}"
-      # Mude para "true" somente depois que o dominio final tiver HTTPS configurado.
-      FORCE_HTTPS: "${FORCE_HTTPS:-false}"
       # Antivirus nos uploads (opcional) - ver servico "clamav" abaixo.
       # So funciona de verdade se voce subir tambem com --profile clamav.
-      CLAMAV_ENABLED: "${CLAMAV_ENABLED:-false}"
       CLAMAV_HOST: clamav
       CLAMAV_PORT: 3310
     volumes:

@@ -14,9 +14,10 @@ class SiteController extends Controller
         $content = ContentStore::get('home', ContentDefaults::home());
         $carrossel = ContentStore::get('carrossel', ContentDefaults::carrossel());
         $mostrarEventos = EventoStore::mostrarMenu();
-        // 5 = 1 noticia em destaque (imagem grande) + 4 na lista ao lado,
-        // igual ao bloco "Latest Posts" do tema (ver site/home.blade.php).
-        $noticias = NoticiaStore::latest(5);
+        // 4 = 1 noticia em destaque (imagem grande) + 3 na lista ao lado, que e
+        // o que deixa a coluna da direita com altura parecida a do destaque
+        // (ver o bloco "Latest Posts" em site/home.blade.php).
+        $noticias = NoticiaStore::latest(4);
         $eventos = $mostrarEventos ? EventoStore::upcoming(5) : [];
 
         return view('site.home', compact('content', 'carrossel', 'noticias', 'eventos', 'mostrarEventos'));

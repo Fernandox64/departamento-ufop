@@ -3,9 +3,9 @@
 @section('content')
     @if(!empty($noticias))
         @php
-            // 1a noticia vira o destaque grande; as demais (ate 4) ficam na lista ao lado.
+            // 1a noticia vira o destaque grande; as demais (ate 3) ficam na lista ao lado.
             $noticiaDestaque = $noticias[0];
-            $noticiasLista = array_slice($noticias, 1, 4);
+            $noticiasLista = array_slice($noticias, 1, 3);
         @endphp
         <section class="back-hero-area back-latest-posts">
             <div class="container">

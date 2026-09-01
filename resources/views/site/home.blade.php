@@ -17,63 +17,109 @@
     @endif
 
     @if(!empty($noticias))
-        <section class="py-5 bg-light">
+        @php
+            // 1a noticia vira o destaque grande; as demais (ate 4) ficam na lista ao lado.
+            $noticiaDestaque = $noticias[0];
+            $noticiasLista = array_slice($noticias, 1, 4);
+        @endphp
+        <section class="back-hero-area back-latest-posts">
             <div class="container">
-                <div class="row g-4">
-                    <div class="{{ $mostrarEventos && !empty($eventos) ? 'col-lg-8' : 'col-12' }}">
-                        <div class="d-flex justify-content-between align-items-end flex-wrap gap-2 mb-4">
-                            <div class="back-title mb-0"><h2>Ultimas noticias</h2></div>
-                            <a href="{{ route('noticias.index') }}" class="back-btn">Ver todas</a>
-                        </div>
-                        <div class="row g-4">
-                            @foreach($noticias as $item)
-                                <div class="{{ $mostrarEventos && !empty($eventos) ? 'col-md-6' : 'col-md-4' }}">
-                                    <div class="noticia-card h-100">
-                                        <a href="{{ route('noticias.show', $item['id']) }}" class="noticia-card-img">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="back-title mb-0"><h2>Ultimas noticias</h2></div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="{{ route('noticias.index') }}" class="back-btn">Ver todas</a>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-8">
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <div class="image-area dept-destaque @if(empty($noticiaDestaque['imagem'])) dept-destaque-sem-imagem @endif">
+                                    <a href="{{ route('noticias.show', $noticiaDestaque['id']) }}">
+                                        @if(!empty($noticiaDestaque['imagem']))
+                                            <img src="{{ asset($noticiaDestaque['imagem']) }}" alt="{{ $noticiaDestaque['titulo'] }}">
+                                        @endif
+                                    </a>
+                                    <div class="back-btm-content">
+                                        <span class="back-cate dept-cate-{{ $noticiaDestaque['tipo'] }}">{{ $noticiaDestaque['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
+                                        <h3><a href="{{ route('noticias.show', $noticiaDestaque['id']) }}">{{ $noticiaDestaque['titulo'] }}</a></h3>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="back-date">
+                                                <i class="fa-solid fa-clock me-2"></i>
+                                                {{ \Illuminate\Support\Carbon::parse($noticiaDestaque['data_publicacao'])->translatedFormat('d \d\e F \d\e Y') }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-4 md-mt-40">
+                        <ul class="back-hero-bottom list-unstyled">
+                            @foreach($noticiasLista as $item)
+                                <li>
+                                    <div class="image-areas">
+                                        <a href="{{ route('noticias.show', $item['id']) }}">
                                             @if(!empty($item['imagem']))
                                                 <img src="{{ asset($item['imagem']) }}" alt="{{ $item['titulo'] }}">
                                             @else
-                                                <span class="noticia-card-img-placeholder"><i class="fa-solid fa-newspaper"></i></span>
+                                                <span class="dept-thumb-vazia dept-cate-{{ $item['tipo'] }}">
+                                                    <i class="fa-solid {{ $item['tipo'] === 'edital' ? 'fa-file-lines' : 'fa-newspaper' }}"></i>
+                                                </span>
                                             @endif
                                         </a>
-                                        <div class="p-3">
-                                            <span class="badge noticia-badge-{{ $item['tipo'] }}">{{ $item['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
-                                            <span class="text-muted small ms-2">{{ \Illuminate\Support\Carbon::parse($item['data_publicacao'])->format('d/m/Y') }}</span>
-                                            <h3 class="h6 mt-2"><a href="{{ route('noticias.show', $item['id']) }}" class="text-decoration-none text-reset">{{ $item['titulo'] }}</a></h3>
-                                            <p class="small text-muted mb-0">{{ \Illuminate\Support\Str::limit($item['resumo'], 90) }}</p>
-                                        </div>
                                     </div>
-                                </div>
+                                    <div class="back-btm-content">
+                                        <span class="back-cates">{{ $item['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
+                                        <h3><a href="{{ route('noticias.show', $item['id']) }}">{{ $item['titulo'] }}</a></h3>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="back-date">
+                                                <i class="fa-solid fa-clock me-2"></i>
+                                                {{ \Illuminate\Support\Carbon::parse($item['data_publicacao'])->format('d/m/Y') }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
                             @endforeach
-                        </div>
+                        </ul>
                     </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
-                    @if($mostrarEventos && !empty($eventos))
-                        <div class="col-lg-4">
-                            <div class="eventos-sidebar h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h2 class="h5 mb-0">Eventos</h2>
-                                    <a href="{{ route('eventos.index') }}" class="small">Ver todos</a>
+    @if($mostrarEventos && !empty($eventos))
+        <section class="py-5 bg-light">
+            <div class="container">
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-8">
+                        <div class="back-title mb-0"><h2>Proximos eventos</h2></div>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="{{ route('eventos.index') }}" class="back-btn">Ver todos</a>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    @foreach($eventos as $evento)
+                        <div class="col-lg-4 col-md-6">
+                            <div class="d-flex gap-3 align-items-start bg-white p-3 rounded-3 h-100 border">
+                                <div class="evento-data-badge text-center flex-shrink-0">
+                                    <div class="evento-data-dia">{{ \Illuminate\Support\Carbon::parse($evento['data_evento'])->format('d') }}</div>
+                                    <div class="evento-data-mes">{{ \Illuminate\Support\Carbon::parse($evento['data_evento'])->translatedFormat('M') }}</div>
                                 </div>
-                                <div class="d-flex flex-column gap-3">
-                                    @foreach($eventos as $evento)
-                                        <div class="d-flex gap-3 align-items-start">
-                                            <div class="evento-data-badge text-center flex-shrink-0">
-                                                <div class="evento-data-dia">{{ \Illuminate\Support\Carbon::parse($evento['data_evento'])->format('d') }}</div>
-                                                <div class="evento-data-mes">{{ \Illuminate\Support\Carbon::parse($evento['data_evento'])->translatedFormat('M') }}</div>
-                                            </div>
-                                            <div>
-                                                <h3 class="h6 mb-0">{{ $evento['titulo'] }}</h3>
-                                                @if(!empty($evento['local']))
-                                                    <p class="small text-muted mb-0">{{ $evento['local'] }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @endforeach
+                                <div>
+                                    <h3 class="h6 mb-1">{{ $evento['titulo'] }}</h3>
+                                    @if(!empty($evento['local']))
+                                        <p class="small text-muted mb-0">{{ $evento['local'] }}</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    @endforeach
                 </div>
             </div>
         </section>

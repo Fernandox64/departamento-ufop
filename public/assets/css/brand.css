@@ -171,6 +171,78 @@
     background: var(--brand-charcoal);
 }
 
+/* ---------- Ultimas noticias na home (bloco "Latest Posts" do tema) ----------
+ * O tema usa .back-latest-posts (destaque grande + lista com miniaturas
+ * redondas). O que acrescentamos aqui: tamanho fixo do destaque, cores da
+ * marca no lugar do azul do tema, e um visual decente quando a noticia nao
+ * tem imagem (caso comum em edital/aviso, que costuma ser so texto).
+ */
+
+.back-latest-posts .dept-destaque {
+    height: 420px;
+    overflow: hidden;
+}
+.back-latest-posts .dept-destaque > a {
+    display: block;
+    height: 100%;
+}
+.back-latest-posts .dept-destaque img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* Sem imagem: fundo da marca — o gradiente escuro do tema (:before) continua
+ * por cima, entao o texto branco do overlay segue legivel. */
+.back-latest-posts .dept-destaque-sem-imagem {
+    background: linear-gradient(135deg, var(--brand-wine), var(--brand-charcoal));
+}
+
+/* Selo de tipo (Noticia/Edital) nas cores da marca, no lugar do azul do tema. */
+.back-cate.dept-cate-noticia {
+    background: var(--brand-wine);
+}
+.back-cate.dept-cate-edital {
+    background: var(--brand-charcoal);
+}
+
+/* Miniaturas da lista lateral: o tema deixa redondas, entao precisam ser
+ * quadradas para nao virar elipse. */
+.back-latest-posts .back-hero-bottom li .image-areas a {
+    display: block;
+    aspect-ratio: 1 / 1;
+}
+.back-latest-posts .back-hero-bottom li .image-areas img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.dept-thumb-vazia {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5rem;
+}
+.back-latest-posts .back-hero-bottom li .back-btm-content .back-date {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 991.98px) {
+    /* Em telas pequenas o destaque nao precisa ser tao alto, e a lista lateral
+     * perde o recuo que o tema aplica quando ela fica ao lado do destaque. */
+    .back-latest-posts .dept-destaque {
+        height: 280px;
+    }
+    .back-latest-posts .back-hero-bottom {
+        padding-left: 0;
+    }
+}
+
 /* ---------- Eventos ---------- */
 
 .evento-data-badge {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Support\NoticiaStore;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class NoticiaController extends Controller
 {
@@ -13,19 +12,22 @@ class NoticiaController extends Controller
         $tipo = $request->query('tipo');
         $items = NoticiaStore::byTipo($tipo);
 
-        $perPage = 9;
-        $page = max(1, (int) $request->query('page', 1));
-        $slice = array_slice($items, ($page - 1) * $perPage, $perPage);
+        // A navegacao da listagem e por ano de publicacao (nao por numero de
+        // pagina): os anos vem do conjunto ja filtrado por tipo, entao todo ano
+        // oferecido tem pelo menos uma publicacao.
+        $anos = NoticiaStore::anos($items);
 
-        $paginator = new LengthAwarePaginator(
-            $slice,
-            count($items),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        // Usa o ano pedido na URL apenas se ele existir de fato; senao cai no
+        // mais recente (cobre link antigo, ano digitado a mao e troca de tipo
+        // que deixa de ter aquele ano).
+        $anoSelecionado = (int) $request->query('ano');
+        if (! in_array($anoSelecionado, $anos, true)) {
+            $anoSelecionado = $anos[0] ?? null;
+        }
 
-        return view('site.noticias.index', ['items' => $paginator, 'tipo' => $tipo]);
+        $items = $anoSelecionado ? NoticiaStore::byAno($items, $anoSelecionado) : [];
+
+        return view('site.noticias.index', compact('items', 'tipo', 'anos', 'anoSelecionado'));
     }
 
     public function show(string $id)

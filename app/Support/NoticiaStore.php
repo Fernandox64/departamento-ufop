@@ -40,6 +40,42 @@ class NoticiaStore
         return array_values(array_filter($items, fn ($item) => ($item['tipo'] ?? '') === $tipo));
     }
 
+    /**
+     * Anos presentes nas publicacoes informadas, do mais recente para o mais
+     * antigo. Recebe a lista ja filtrada (por tipo, por exemplo) para nunca
+     * oferecer um ano que resultaria em lista vazia.
+     *
+     * @param array $items publicacoes no formato de self::all()
+     * @return int[]
+     */
+    public static function anos(array $items): array
+    {
+        $anos = [];
+
+        foreach ($items as $item) {
+            $ano = (int) substr((string) ($item['data_publicacao'] ?? ''), 0, 4);
+            if ($ano > 0) {
+                $anos[$ano] = true;
+            }
+        }
+
+        $anos = array_keys($anos);
+        rsort($anos);
+
+        return $anos;
+    }
+
+    /**
+     * Filtra as publicacoes informadas por ano de publicacao.
+     */
+    public static function byAno(array $items, int $ano): array
+    {
+        return array_values(array_filter(
+            $items,
+            fn ($item) => (int) substr((string) ($item['data_publicacao'] ?? ''), 0, 4) === $ano
+        ));
+    }
+
     public static function find(string $id): ?array
     {
         foreach (self::all() as $item) {

@@ -9,13 +9,25 @@
 @section('content')
     <div class="py-5">
         <div class="container">
-            <div class="d-flex gap-2 mb-4 flex-wrap">
-                <a href="{{ route('noticias.index') }}" class="btn btn-sm {{ !$tipo ? 'btn-primary' : 'btn-outline-secondary' }}">Todas</a>
-                <a href="{{ route('noticias.index', ['tipo' => 'noticia']) }}" class="btn btn-sm {{ $tipo === 'noticia' ? 'btn-primary' : 'btn-outline-secondary' }}">Noticias</a>
-                <a href="{{ route('noticias.index', ['tipo' => 'edital']) }}" class="btn btn-sm {{ $tipo === 'edital' ? 'btn-primary' : 'btn-outline-secondary' }}">Editais</a>
+            {{-- Mantem o ano escolhido ao trocar de tipo; se aquele ano nao tiver
+                 publicacoes do novo tipo, o controller cai no mais recente. --}}
+            <div class="d-flex gap-2 mb-3 flex-wrap">
+                <a href="{{ route('noticias.index', array_filter(['ano' => $anoSelecionado])) }}" class="btn btn-sm {{ !$tipo ? 'btn-primary' : 'btn-outline-secondary' }}">Todas</a>
+                <a href="{{ route('noticias.index', array_filter(['tipo' => 'noticia', 'ano' => $anoSelecionado])) }}" class="btn btn-sm {{ $tipo === 'noticia' ? 'btn-primary' : 'btn-outline-secondary' }}">Noticias</a>
+                <a href="{{ route('noticias.index', array_filter(['tipo' => 'edital', 'ano' => $anoSelecionado])) }}" class="btn btn-sm {{ $tipo === 'edital' ? 'btn-primary' : 'btn-outline-secondary' }}">Editais</a>
             </div>
 
-            @if($items->isEmpty())
+            @if(count($anos) > 1)
+                <div class="d-flex gap-2 mb-4 flex-wrap align-items-center noticias-anos">
+                    <span class="text-muted small me-1">Ano:</span>
+                    @foreach($anos as $ano)
+                        <a href="{{ route('noticias.index', array_filter(['tipo' => $tipo, 'ano' => $ano])) }}"
+                           class="btn btn-sm {{ $ano === $anoSelecionado ? 'btn-primary' : 'btn-outline-secondary' }}">{{ $ano }}</a>
+                    @endforeach
+                </div>
+            @endif
+
+            @if(empty($items))
                 <p class="text-muted">Nenhuma publicacao encontrada.</p>
             @else
                 <div class="row g-4">
@@ -40,9 +52,9 @@
                     @endforeach
                 </div>
 
-                <div class="mt-4">
-                    {{ $items->links('pagination::bootstrap-5') }}
-                </div>
+                <p class="text-muted small mt-4 mb-0">
+                    {{ count($items) }} {{ count($items) === 1 ? 'publicacao' : 'publicacoes' }} em {{ $anoSelecionado }}.
+                </p>
             @endif
         </div>
     </div>

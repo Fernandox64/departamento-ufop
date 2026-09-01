@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/brand.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/brand.css') }}?v={{ \App\Support\Assets::versao('assets/css/brand.css') }}">
     <style>
         body { background: #f4f5f7; }
         .admin-sidebar a { display: block; padding: .6rem 1rem; border-radius: .4rem; color: #333; text-decoration: none; }

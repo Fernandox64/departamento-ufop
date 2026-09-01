@@ -23,7 +23,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/back-spacing.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/brand.css') }}">
+    {{-- brand.css e o unico CSS que editamos; o ?v= muda junto com o arquivo
+         para o navegador nao servir uma versao antiga do cache. --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/brand.css') }}?v={{ \App\Support\Assets::versao('assets/css/brand.css') }}">
     @stack('styles')
 </head>
 <body>

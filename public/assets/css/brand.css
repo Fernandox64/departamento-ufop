@@ -198,11 +198,14 @@
     background: linear-gradient(135deg, var(--brand-wine), var(--brand-charcoal));
 }
 
-/* Selo de tipo (Noticia/Edital) nas cores da marca, no lugar do azul do tema. */
-.back-cate.dept-cate-noticia {
+/* Cores da marca por tipo de publicacao, no lugar do azul do tema. Vale tanto
+ * para o selo do destaque (.back-cate) quanto para a miniatura redonda da
+ * lista lateral (.dept-thumb-vazia) — por isso nao exige outra classe junto.
+ * O .back-cate do tema nao define fundo proprio, entao nao ha conflito. */
+.dept-cate-noticia {
     background: var(--brand-wine);
 }
-.back-cate.dept-cate-edital {
+.dept-cate-edital {
     background: var(--brand-charcoal);
 }
 

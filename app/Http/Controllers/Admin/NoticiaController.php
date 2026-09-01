@@ -6,14 +6,61 @@ use App\Http\Controllers\Controller;
 use App\Support\ImageUploader;
 use App\Support\NoticiaStore;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class NoticiaController extends Controller
 {
-    public function index()
-    {
-        $items = NoticiaStore::all();
+    /** Linhas por pagina na tabela do painel. */
+    protected const POR_PAGINA = 25;
 
-        return view('admin.noticias.index', compact('items'));
+    public function index(Request $request)
+    {
+        // A tabela nunca carrega o acervo inteiro: filtra por tipo e por ano e
+        // ainda pagina o resultado. Com muitas publicacoes, montar tudo de uma
+        // vez gerava uma pagina de varios MB a cada acesso.
+        $tipo = $request->query('tipo');
+        $doTipo = NoticiaStore::byTipo($tipo);
+
+        // Anos vem do conjunto ja filtrado por tipo: todo ano oferecido tem
+        // pelo menos uma publicacao daquele tipo.
+        $anos = NoticiaStore::anos($doTipo);
+
+        $anoParam = (string) $request->query('ano', '');
+        if ($anoParam === 'todos') {
+            $anoSelecionado = 'todos';
+            $items = $doTipo;
+        } else {
+            $ano = (int) $anoParam;
+            if (! in_array($ano, $anos, true)) {
+                $ano = $anos[0] ?? 0;   // sem ano valido na URL, abre no mais recente
+            }
+            $anoSelecionado = $ano;
+            $items = $ano ? NoticiaStore::byAno($doTipo, $ano) : [];
+        }
+
+        $total = count($items);
+        $ultima = max(1, (int) ceil($total / self::POR_PAGINA));
+        $pagina = min(max(1, (int) $request->query('pagina', 1)), $ultima);
+
+        $paginator = new LengthAwarePaginator(
+            array_slice($items, ($pagina - 1) * self::POR_PAGINA, self::POR_PAGINA),
+            $total,
+            self::POR_PAGINA,
+            $pagina,
+            [
+                'path' => $request->url(),
+                'pageName' => 'pagina',
+                'query' => $request->except('pagina'),
+            ]
+        );
+
+        return view('admin.noticias.index', [
+            'items' => $paginator,
+            'tipo' => $tipo,
+            'anos' => $anos,
+            'anoSelecionado' => $anoSelecionado,
+            'total' => $total,
+        ]);
     }
 
     public function create()

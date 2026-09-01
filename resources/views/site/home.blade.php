@@ -18,7 +18,7 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
+                <div class="row mt-3">
                     <div class="col-lg-8">
                         <ul class="list-unstyled mb-0">
                             <li>

@@ -209,30 +209,76 @@
     background: var(--brand-charcoal);
 }
 
-/* Miniaturas da lista lateral: o tema deixa redondas, entao precisam ser
- * quadradas para nao virar elipse. */
+/* Miniaturas da lista lateral. O tema as deixa redondas e com largura em
+ * porcentagem (35%), o que virava elipse quando a imagem nao era quadrada.
+ * Aqui elas passam a ser quadradas e de tamanho fixo, o que garante o mesmo
+ * recorte para qualquer proporcao de imagem. */
+.back-latest-posts .back-hero-bottom li .image-areas {
+    flex: 0 0 96px;
+    max-width: 96px;
+    padding-right: 14px;
+}
 .back-latest-posts .back-hero-bottom li .image-areas a {
     display: block;
-    aspect-ratio: 1 / 1;
+    width: 82px;
+    height: 82px;
 }
 .back-latest-posts .back-hero-bottom li .image-areas img {
-    width: 100%;
-    height: 100%;
+    width: 82px;
+    height: 82px;
     object-fit: cover;
+    display: block;
+    border-radius: 4px;   /* quadrada, no lugar do 50% (circulo) do tema */
+}
+/* Com a miniatura em tamanho fixo, o texto ocupa o resto da linha. */
+.back-latest-posts .back-hero-bottom li .back-btm-content {
+    flex: 1 1 auto;
+    max-width: none;
 }
 .dept-thumb-vazia {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    width: 82px;
+    height: 82px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 .back-latest-posts .back-hero-bottom li .back-btm-content .back-date {
     display: flex;
     align-items: center;
+}
+
+/* ---- Espacamento do bloco ----
+ * O tema reserva 70px acima/abaixo e 32px entre os itens da lista, o que
+ * deixava a secao muito espalhada. */
+.back-latest-posts {
+    padding: 40px 0;
+}
+.back-latest-posts .back-hero-bottom {
+    padding-left: 24px;
+}
+.back-latest-posts .back-hero-bottom li {
+    margin-bottom: 18px;
+}
+
+/* ---- Destaque: titulo ----
+ * 36px/46px do tema estourava a altura do destaque em titulo longo (o texto
+ * saia por baixo do recorte). Fica menor e limitado a 3 linhas. */
+.back-latest-posts .dept-destaque .back-btm-content {
+    padding: 24px;
+}
+.back-latest-posts .dept-destaque .back-btm-content h3 {
+    font-size: 24px;
+    line-height: 32px;
+    margin: 12px 0 10px;
+}
+.back-latest-posts .dept-destaque .back-btm-content h3 a {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 @media (max-width: 991.98px) {

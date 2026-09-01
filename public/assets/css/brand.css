@@ -230,9 +230,13 @@
     display: block;
     border-radius: 4px;   /* quadrada, no lugar do 50% (circulo) do tema */
 }
-/* Com a miniatura em tamanho fixo, o texto ocupa o resto da linha. */
+/* Com a miniatura em tamanho fixo, o texto ocupa o resto da linha.
+ * Precisa de base 0 (e min-width: 0): com "flex-basis: auto" a base viraria a
+ * largura natural do titulo e, como o li do tema tem flex-wrap: wrap, o texto
+ * caia para baixo da miniatura em vez de ficar ao lado. */
 .back-latest-posts .back-hero-bottom li .back-btm-content {
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-width: 0;
     max-width: none;
 }
 .dept-thumb-vazia {

@@ -9,16 +9,13 @@
         @endphp
         <section class="back-hero-area back-latest-posts">
             <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <div class="back-title mb-0"><h2>Ultimas noticias</h2></div>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <a href="{{ route('noticias.index') }}" class="back-btn">Ver todas</a>
-                    </div>
+                <div class="dept-secao-titulo">
+                    <h2>Ultimas noticias</h2>
+                    <span class="dept-secao-linha"></span>
+                    <a href="{{ route('noticias.index') }}" class="back-btn">Ver todas</a>
                 </div>
 
-                <div class="row mt-3">
+                <div class="row">
                     <div class="col-lg-8">
                         <ul class="list-unstyled mb-0">
                             <li>
@@ -80,13 +77,10 @@
     @if($mostrarEventos && !empty($eventos))
         <section class="py-5 bg-light">
             <div class="container">
-                <div class="row align-items-center mb-4">
-                    <div class="col-md-8">
-                        <div class="back-title mb-0"><h2>Proximos eventos</h2></div>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <a href="{{ route('eventos.index') }}" class="back-btn">Ver todos</a>
-                    </div>
+                <div class="dept-secao-titulo">
+                    <h2>Proximos eventos</h2>
+                    <span class="dept-secao-linha"></span>
+                    <a href="{{ route('eventos.index') }}" class="back-btn">Ver todos</a>
                 </div>
                 <div class="row g-4">
                     @foreach($eventos as $evento)

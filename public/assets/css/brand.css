@@ -250,6 +250,49 @@
     align-items: center;
 }
 
+/* ---- Cabecalho de secao (titulo + linha + botao) ----
+ * O .back-title do tema tem "margin: 0 0 40px" no h2 e desenha a linha por
+ * pseudo-elementos posicionados de forma absoluta. Isso deixava o botao
+ * desalinhado (o centro considerava a margem de 40px) e o espacamento
+ * irregular. Aqui o cabecalho e um flex simples: titulo, linha que preenche o
+ * espaco livre e botao, todos centrados na mesma altura.
+ */
+.dept-secao-titulo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 26px;
+}
+.dept-secao-titulo h2 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0;
+    flex: 0 0 auto;
+}
+.dept-secao-titulo .dept-secao-linha {
+    flex: 1 1 auto;
+    height: 5px;
+    /* duas linhas finas, como a decoracao do tema */
+    border-top: 1px solid rgba(51, 51, 51, 0.2);
+    border-bottom: 1px solid rgba(51, 51, 51, 0.2);
+}
+.dept-secao-titulo .back-btn {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 575.98px) {
+    /* No celular a linha decorativa so rouba espaco. */
+    .dept-secao-titulo {
+        gap: 12px;
+    }
+    .dept-secao-titulo .dept-secao-linha {
+        display: none;
+    }
+    .dept-secao-titulo h2 {
+        font-size: 24px;
+    }
+}
+
 /* ---- Espacamento do bloco ----
  * O tema reserva 70px acima/abaixo e 32px entre os itens da lista, o que
  * deixava a secao muito espalhada. */

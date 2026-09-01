@@ -1,21 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @if(!empty($carrossel['slides']))
-        <section class="dept-carousel-section">
-            <div class="dept-carousel owl-carousel">
-                @foreach($carrossel['slides'] as $slide)
-                    <div class="dept-carousel-slide">
-                        <img src="{{ asset($slide['imagem']) }}" alt="{{ $slide['legenda'] ?? $siteSettings['nome_site'] }}">
-                        @if(!empty($slide['legenda']))
-                            <div class="dept-carousel-caption">{{ $slide['legenda'] }}</div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
     @if(!empty($noticias))
         @php
             // 1a noticia vira o destaque grande; as demais (ate 4) ficam na lista ao lado.
@@ -166,6 +151,22 @@
             </div>
         </div>
     </section>
+
+    {{-- Carrossel de imagens: fica no fim da pagina, logo acima do rodape. --}}
+    @if(!empty($carrossel['slides']))
+        <section class="dept-carousel-section">
+            <div class="dept-carousel owl-carousel">
+                @foreach($carrossel['slides'] as $slide)
+                    <div class="dept-carousel-slide">
+                        <img src="{{ asset($slide['imagem']) }}" alt="{{ $slide['legenda'] ?? $siteSettings['nome_site'] }}">
+                        @if(!empty($slide['legenda']))
+                            <div class="dept-carousel-caption">{{ $slide['legenda'] }}</div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </section>
+    @endif
 @endsection
 
 @if(!empty($carrossel['slides']))

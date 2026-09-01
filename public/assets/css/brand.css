@@ -308,6 +308,10 @@
 }
 .back-latest-posts .back-hero-bottom li {
     margin-bottom: 18px;
+    /* O tema alinha pelo topo (flex-start), o que deixava a miniatura colada
+     * em cima com sobra embaixo. Centrada, ela fica com o mesmo respiro
+     * acima e abaixo em relacao ao texto. */
+    align-items: center;
 }
 
 /* ---- Destaque: titulo ----

@@ -7,6 +7,7 @@ use App\Support\ContentDefaults;
 use App\Support\ContentStore;
 use App\Support\ImageUploader;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ContentController extends Controller
 {
@@ -16,9 +17,11 @@ class ContentController extends Controller
 
         $secoes = [
             ['chave' => 'configuracoes', 'titulo' => 'Configuracoes gerais', 'rota' => 'admin.configuracoes.edit', 'apenas_administrador' => true],
+            ['chave' => 'logos', 'titulo' => 'Logos do site', 'rota' => 'admin.logos.edit', 'apenas_administrador' => true],
+            ['chave' => 'tema', 'titulo' => 'Tema e Cores', 'rota' => 'admin.tema.edit'],
             ['chave' => 'rodape', 'titulo' => 'Rodape do site', 'rota' => 'admin.rodape.edit'],
             ['chave' => 'home', 'titulo' => 'Pagina inicial', 'rota' => 'admin.home.edit'],
-            ['chave' => 'destaque', 'titulo' => 'Imagem de destaque', 'rota' => 'admin.destaque.edit'],
+            ['chave' => 'destaque', 'titulo' => 'Imagens de destaque', 'rota' => 'admin.destaque.edit'],
             ['chave' => 'carrossel', 'titulo' => 'Carrossel de imagens', 'rota' => 'admin.carrossel.edit'],
             ['chave' => 'noticias', 'titulo' => 'Noticias e Editais', 'rota' => 'admin.noticias.index'],
             ['chave' => 'eventos', 'titulo' => 'Eventos', 'rota' => 'admin.eventos.index'],
@@ -41,8 +44,80 @@ class ContentController extends Controller
     }
 
     // ---------------------------------------------------------------
+    // Tema e cores
+    // ---------------------------------------------------------------
+
+    public function temaEdit()
+    {
+        $content = ContentStore::get('tema', ContentDefaults::tema());
+        $paletas = ContentDefaults::paletasTema();
+
+        return view('admin.sections.tema', compact('content', 'paletas'));
+    }
+
+    public function temaUpdate(Request $request)
+    {
+        $data = $request->validate([
+            'paleta' => ['required', Rule::in(array_keys(ContentDefaults::paletasTema()))],
+            'menu_transparente' => ['nullable', 'boolean'],
+        ]);
+
+        ContentStore::save('tema', [
+            'paleta' => $data['paleta'],
+            'menu_transparente' => $request->boolean('menu_transparente'),
+        ]);
+
+        return back()->with('status', 'Tema e cores atualizados com sucesso.');
+    }
+
+    // ---------------------------------------------------------------
     // Configuracoes gerais
     // ---------------------------------------------------------------
+
+    public function logosEdit()
+    {
+        $configuracoes = ContentStore::get('configuracoes', ContentDefaults::configuracoes());
+        $rodape = ContentStore::get('rodape', ContentDefaults::rodape());
+
+        return view('admin.sections.logos', compact('configuracoes', 'rodape'));
+    }
+
+    public function logosUpdate(Request $request)
+    {
+        $request->validate([
+            'logo_principal_arquivo' => ['nullable', 'image', 'max:2048'],
+            'logo_principal_transparente_arquivo' => ['nullable', 'image', 'max:2048'],
+            'logo_rodape_arquivo' => ['nullable', 'image', 'max:2048'],
+        ], [
+            'logo_principal_arquivo.max' => 'A logo do menu principal deve ter no maximo 2 MB.',
+            'logo_principal_transparente_arquivo.max' => 'A logo do menu principal transparente deve ter no maximo 2 MB.',
+            'logo_rodape_arquivo.max' => 'A logo do footer deve ter no maximo 2 MB.',
+            'logo_principal_arquivo.image' => 'A logo do menu principal deve ser uma imagem valida.',
+            'logo_principal_transparente_arquivo.image' => 'A logo do menu principal transparente deve ser uma imagem valida.',
+            'logo_rodape_arquivo.image' => 'A logo do footer deve ser uma imagem valida.',
+        ]);
+
+        $configuracoes = ContentStore::get('configuracoes', ContentDefaults::configuracoes());
+        $rodape = ContentStore::get('rodape', ContentDefaults::rodape());
+
+        $configuracoes['logo'] = ImageUploader::store(
+            $request->file('logo_principal_arquivo'),
+            $configuracoes['logo']
+        );
+        $configuracoes['logo_transparente'] = ImageUploader::store(
+            $request->file('logo_principal_transparente_arquivo'),
+            $configuracoes['logo_transparente'] ?? $configuracoes['logo']
+        );
+        $rodape['logo'] = ImageUploader::store(
+            $request->file('logo_rodape_arquivo'),
+            $rodape['logo']
+        );
+
+        ContentStore::save('configuracoes', $configuracoes);
+        ContentStore::save('rodape', $rodape);
+
+        return back()->with('status', 'Logos atualizadas com sucesso.');
+    }
 
     public function configuracoesEdit()
     {
@@ -61,13 +136,12 @@ class ContentController extends Controller
             'twitter' => ['nullable', 'string', 'max:255'],
             'linkedin' => ['nullable', 'string', 'max:255'],
             'youtube' => ['nullable', 'string', 'max:255'],
-            'logo_arquivo' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $atual = ContentStore::get('configuracoes', ContentDefaults::configuracoes());
 
-        $data['logo'] = ImageUploader::store($request->file('logo_arquivo'), $atual['logo']);
-        unset($data['logo_arquivo']);
+        $data['logo'] = $atual['logo'];
+        $data['logo_transparente'] = $atual['logo_transparente'] ?? $atual['logo'];
 
         ContentStore::save('configuracoes', $data);
 
@@ -93,13 +167,11 @@ class ContentController extends Controller
             'endereco' => ['nullable', 'string', 'max:255'],
             'telefone' => ['nullable', 'string', 'max:40'],
             'email' => ['nullable', 'email', 'max:150'],
-            'logo_arquivo' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $atual = ContentStore::get('rodape', ContentDefaults::rodape());
 
-        $data['logo'] = ImageUploader::store($request->file('logo_arquivo'), $atual['logo']);
-        unset($data['logo_arquivo']);
+        $data['logo'] = $atual['logo'];
 
         ContentStore::save('rodape', $data);
 
@@ -191,20 +263,36 @@ class ContentController extends Controller
     public function destaqueUpdate(Request $request)
     {
         $data = $request->validate([
-            'legenda' => ['nullable', 'string', 'max:150'],
-            'link' => ['nullable', 'string', 'max:500'],
-            'imagem_arquivo' => ['nullable', 'image', 'max:4096'],
+            'slides' => ['array'],
+            'slides.*.legenda' => ['nullable', 'string', 'max:150'],
+            'slides.*.texto' => ['nullable', 'string', 'max:500'],
+            'slides.*.link' => ['nullable', 'string', 'max:500'],
+            'slides.*.imagem_arquivo' => ['nullable', 'image', 'max:4096'],
         ]);
 
         $atual = ContentStore::get('destaque', ContentDefaults::destaque());
+        $slidesAtuais = $this->normalizarSlidesDestaque($atual);
 
-        ContentStore::save('destaque', [
-            'imagem' => ImageUploader::store($request->file('imagem_arquivo'), $atual['imagem']),
-            'legenda' => $data['legenda'] ?? '',
-            'link' => $data['link'] ?? '',
-        ]);
+        $slides = [];
+        foreach ($data['slides'] ?? [] as $idx => $slide) {
+            $imagemAtual = $slidesAtuais[$idx]['imagem'] ?? '';
+            $imagem = ImageUploader::store($request->file("slides.$idx.imagem_arquivo"), $imagemAtual);
 
-        return back()->with('status', 'Imagem de destaque atualizada com sucesso.');
+            if ($imagem === '') {
+                continue;
+            }
+
+            $slides[] = [
+                'imagem' => $imagem,
+                'legenda' => trim((string) ($slide['legenda'] ?? '')),
+                'texto' => trim((string) ($slide['texto'] ?? '')),
+                'link' => trim((string) ($slide['link'] ?? '')),
+            ];
+        }
+
+        ContentStore::save('destaque', ['slides' => $slides]);
+
+        return back()->with('status', 'Imagens de destaque atualizadas com sucesso.');
     }
 
     // ---------------------------------------------------------------
@@ -421,5 +509,23 @@ class ContentController extends Controller
             return trim((string) ($linha['titulo'] ?? '')) !== ''
                 || trim((string) ($linha['texto'] ?? '')) !== '';
         }));
+    }
+
+    protected function normalizarSlidesDestaque(array $content): array
+    {
+        if (! empty($content['slides']) && is_array($content['slides'])) {
+            return array_values(array_filter($content['slides'], fn ($slide) => ! empty($slide['imagem'])));
+        }
+
+        if (! empty($content['imagem'])) {
+            return [[
+                'imagem' => $content['imagem'],
+                'legenda' => $content['legenda'] ?? '',
+                'texto' => $content['texto'] ?? '',
+                'link' => $content['link'] ?? '',
+            ]];
+        }
+
+        return [];
     }
 }

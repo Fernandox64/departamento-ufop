@@ -33,11 +33,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['admin.auth', 'admin.audit'])->group(function () {
         Route::get('/', [AdminContentController::class, 'dashboard'])->name('dashboard');
 
+        Route::get('/tema', [AdminContentController::class, 'temaEdit'])->name('tema.edit');
+        Route::post('/tema', [AdminContentController::class, 'temaUpdate'])->name('tema.update');
+
         // Areas restritas ao nivel "administrador": configuracoes sensiveis, backup/restauracao
         // e gerenciamento dos proprios membros da equipe (ver app/Http/Middleware/EnsureAdminIsAdministrador.php).
         Route::middleware('admin.administrador')->group(function () {
             Route::get('/configuracoes', [AdminContentController::class, 'configuracoesEdit'])->name('configuracoes.edit');
             Route::post('/configuracoes', [AdminContentController::class, 'configuracoesUpdate'])->name('configuracoes.update');
+
+            Route::get('/logos', [AdminContentController::class, 'logosEdit'])->name('logos.edit');
+            Route::post('/logos', [AdminContentController::class, 'logosUpdate'])->name('logos.update');
 
             Route::get('/backup', [AdminBackupController::class, 'index'])->name('backup.index');
             Route::get('/backup/download', [AdminBackupController::class, 'download'])->name('backup.download');

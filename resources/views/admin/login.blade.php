@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/brand.css') }}">
+    @include('partials.theme-vars')
 </head>
 <body class="bg-light">
     <div class="container">

@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="h4 mb-4">Configuracoes gerais</h1>
-    <p class="text-muted">Identidade do site. Endereco, telefone, e-mail e o logo do rodape ficam em <a href="{{ route('admin.rodape.edit') }}">Rodape do site</a>.</p>
+    <p class="text-muted">Identidade do site e redes sociais. As imagens do cabecalho e do rodape ficam em <a href="{{ route('admin.logos.edit') }}">Logos do site</a>.</p>
 
     <form method="POST" action="{{ route('admin.configuracoes.update') }}" enctype="multipart/form-data">
         @csrf
@@ -15,14 +15,6 @@
             <div class="col-md-4">
                 <label class="form-label">Sigla</label>
                 <input type="text" name="sigla" class="form-control" value="{{ old('sigla', $content['sigla']) }}">
-            </div>
-
-            <div class="col-12"><hr></div>
-
-            <div class="col-md-6">
-                <label class="form-label">Logo do site (aparece no cabecalho)</label>
-                <div class="mb-2 p-2 bg-dark d-inline-block"><img src="{{ asset($content['logo']) }}" alt="Logo atual" style="max-height:60px;"></div>
-                <input type="file" name="logo_arquivo" class="form-control" accept="image/*">
             </div>
 
             <div class="col-12"><hr></div>

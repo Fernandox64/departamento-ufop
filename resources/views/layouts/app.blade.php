@@ -26,6 +26,7 @@
     {{-- brand.css e o unico CSS que editamos; o ?v= muda junto com o arquivo
          para o navegador nao servir uma versao antiga do cache. --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/brand.css') }}?v={{ \App\Support\Assets::versao('assets/css/brand.css') }}">
+    @include('partials.theme-vars')
     @stack('styles')
 </head>
 <body>

@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/brand.css') }}?v={{ \App\Support\Assets::versao('assets/css/brand.css') }}">
+    @include('partials.theme-vars')
+    @stack('styles')
     <style>
         body { background: #f4f5f7; }
         .admin-sidebar a { display: block; padding: .6rem 1rem; border-radius: .4rem; color: #333; text-decoration: none; }
@@ -46,10 +48,12 @@
                 <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Painel</a>
                 @if(session('admin_nivel') === 'administrador')
                     <a href="{{ route('admin.configuracoes.edit') }}" class="{{ request()->routeIs('admin.configuracoes.*') ? 'active' : '' }}">Configuracoes gerais</a>
+                    <a href="{{ route('admin.logos.edit') }}" class="{{ request()->routeIs('admin.logos.*') ? 'active' : '' }}">Logos do site</a>
                 @endif
+                <a href="{{ route('admin.tema.edit') }}" class="{{ request()->routeIs('admin.tema.*') ? 'active' : '' }}">Tema e Cores</a>
                 <a href="{{ route('admin.rodape.edit') }}" class="{{ request()->routeIs('admin.rodape.*') ? 'active' : '' }}">Rodape do site</a>
                 <a href="{{ route('admin.home.edit') }}" class="{{ request()->routeIs('admin.home.*') ? 'active' : '' }}">Pagina inicial</a>
-                <a href="{{ route('admin.destaque.edit') }}" class="{{ request()->routeIs('admin.destaque.*') ? 'active' : '' }}">Imagem de destaque</a>
+                <a href="{{ route('admin.destaque.edit') }}" class="{{ request()->routeIs('admin.destaque.*') ? 'active' : '' }}">Imagens de destaque</a>
                 <a href="{{ route('admin.carrossel.edit') }}" class="{{ request()->routeIs('admin.carrossel.*') ? 'active' : '' }}">Carrossel de imagens</a>
                 <a href="{{ route('admin.noticias.index') }}" class="{{ request()->routeIs('admin.noticias.*') ? 'active' : '' }}">Noticias e Editais</a>
                 <a href="{{ route('admin.eventos.index') }}" class="{{ request()->routeIs('admin.eventos.*') ? 'active' : '' }}">Eventos</a>

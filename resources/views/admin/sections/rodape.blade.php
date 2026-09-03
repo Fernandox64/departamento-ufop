@@ -2,19 +2,12 @@
 
 @section('content')
     <h1 class="h4 mb-4">Rodape do site</h1>
-    <p class="text-muted">Tudo o que aparece no rodape (parte de baixo) de todas as paginas do site.</p>
+    <p class="text-muted">Tudo o que aparece no rodape (parte de baixo) de todas as paginas do site. A logo do rodape fica em <a href="{{ route('admin.logos.edit') }}">Logos do site</a>.</p>
 
     <form method="POST" action="{{ route('admin.rodape.update') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="row g-3">
-            <div class="col-12">
-                <label class="form-label">Imagem do canto inferior esquerdo</label>
-                <div class="mb-2 p-2 bg-dark d-inline-block"><img src="{{ asset($content['logo']) }}" alt="Logo atual" style="max-height:80px;"></div>
-                <input type="file" name="logo_arquivo" class="form-control" accept="image/*">
-                <small class="text-muted">O fundo do rodape e escuro, entao prefira uma imagem que fique legivel sobre fundo escuro.</small>
-            </div>
-
             <div class="col-12">
                 <label class="form-label">Texto abaixo da imagem</label>
                 <textarea name="texto" class="form-control" rows="2">{{ old('texto', $content['texto']) }}</textarea>

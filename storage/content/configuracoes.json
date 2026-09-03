@@ -1,5 +1,11 @@
 {
     "nome_site": "Departamento Modelo",
     "sigla": "DEP",
-    "logo": "assets/images/ufop-selo.png"
+    "logo": "assets/images/ufop-selo-2.png",
+    "logo_transparente": "assets/images/UFOP-Main-Menu.png",
+    "facebook": "",
+    "instagram": "",
+    "twitter": "",
+    "linkedin": "",
+    "youtube": ""
 }

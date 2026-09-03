@@ -1,0 +1,21 @@
+{
+    "items": [
+        {
+            "id": "exemplo-evento",
+            "titulo": "Evento de exemplo",
+            "data_evento": "2026-12-01",
+            "local": "Auditorio do departamento",
+            "descricao": "Substitua por um evento real ou exclua pelo painel admin.",
+            "link": ""
+        },
+        {
+            "titulo": "Sobre o Departamento",
+            "data_evento": "2026-10-12",
+            "local": "workshop",
+            "descricao": "teste",
+            "link": null,
+            "id": "QH8XQNcy"
+        }
+    ],
+    "mostrar_menu": false
+}

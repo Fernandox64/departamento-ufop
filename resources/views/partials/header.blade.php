@@ -1,9 +1,16 @@
-<header id="back-header" class="back-header">
+@php
+    $menuTransparente = !empty($siteThemeOptions['menu_transparente']);
+    $logoCabecalho = $menuTransparente
+        ? ($siteSettings['logo_transparente'] ?? $siteSettings['logo'])
+        : $siteSettings['logo'];
+@endphp
+
+<header id="back-header" class="back-header {{ $menuTransparente ? 'main-header-transparent' : '' }}">
     <nav class="main-header-bar navbar navbar-expand-lg navbar-dark">
         <div class="container flex-wrap gap-3 py-2">
             <a href="{{ route('home') }}" class="main-header-brand d-flex align-items-center gap-3 text-decoration-none me-lg-4">
                 <span class="main-header-logo-box">
-                    <img src="{{ asset($siteSettings['logo']) }}" alt="{{ $siteSettings['nome_site'] }}">
+                    <img src="{{ asset($logoCabecalho) }}" alt="{{ $siteSettings['nome_site'] }}">
                 </span>
                 <span class="main-header-title">{{ $siteSettings['nome_site'] }}</span>
             </a>

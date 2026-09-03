@@ -4,10 +4,12 @@
             <div class="row">
                 <div class="col-lg-4 md-mb-30">
                     <div class="footer-widget footer-widget-1">
-                        <div class="footer-logo white">
-                            <a href="{{ route('home') }}" class="logo-text"><img src="{{ asset($rodape['logo']) }}" alt="{{ $siteSettings['nome_site'] }}"></a>
+                        <div class="footer-brand-info">
+                            <div class="footer-logo white">
+                                <a href="{{ route('home') }}" class="logo-text"><img src="{{ asset($rodape['logo']) }}" alt="{{ $siteSettings['nome_site'] }}"></a>
+                            </div>
+                            <h5 class="footer-subtitle">{{ $rodape['texto'] }}</h5>
                         </div>
-                        <h5 class="footer-subtitle">{{ $rodape['texto'] }}</h5>
                         <h6 class="back-follow-us">Siga-nos</h6>
                         <ul class="social-links">
                             @foreach(['facebook','twitter','instagram','linkedin','youtube'] as $rede)

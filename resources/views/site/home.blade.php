@@ -1,6 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        $destaqueSlides = !empty($destaque['slides']) && is_array($destaque['slides'])
+            ? array_values($destaque['slides'])
+            : (!empty($destaque['imagem'])
+                ? [[
+                    'imagem' => $destaque['imagem'],
+                    'legenda' => $destaque['legenda'] ?? '',
+                    'texto' => $destaque['texto'] ?? '',
+                    'link' => $destaque['link'] ?? '',
+                ]]
+                : []);
+    @endphp
+
     <section class="back-hero-area back-latest-posts">
         <div class="container">
             <div class="dept-secao-titulo">
@@ -10,31 +23,36 @@
             </div>
 
             <div class="row">
-                {{-- Imagem de destaque: editada em /admin/destaque, independente das noticias. --}}
-                @if(!empty($destaque['imagem']))
+                @if(!empty($destaqueSlides))
                     <div class="col-lg-8">
-                        @php $temLink = !empty($destaque['link']); @endphp
-                        <div class="dept-destaque-box">
-                            <{{ $temLink ? 'a' : 'div' }}
-                                @if($temLink) href="{{ $destaque['link'] }}" @endif
-                                class="dept-destaque-img">
-                                <img src="{{ asset($destaque['imagem']) }}"
-                                     alt="{{ $destaque['legenda'] ?: $siteSettings['nome_site'] }}">
-                                @if(!empty($destaque['legenda']))
-                                    <span class="dept-destaque-legenda">{{ $destaque['legenda'] }}</span>
-                                @endif
-                            </{{ $temLink ? 'a' : 'div' }}>
+                        <div class="dept-destaque-box dept-destaque-carousel owl-carousel">
+                            @foreach($destaqueSlides as $slide)
+                                @php $temLink = !empty($slide['link']); @endphp
+                                <div class="dept-destaque-card {{ !empty($slide['texto']) ? 'has-text' : '' }}">
+                                    <{{ $temLink ? 'a' : 'div' }}
+                                        @if($temLink) href="{{ $slide['link'] }}" @endif
+                                        class="dept-destaque-img">
+                                        <img src="{{ asset($slide['imagem']) }}"
+                                             alt="{{ ($slide['legenda'] ?? '') ?: $siteSettings['nome_site'] }}">
+                                        @if(!empty($slide['legenda']))
+                                            <span class="dept-destaque-legenda">{{ $slide['legenda'] }}</span>
+                                        @endif
+                                    </{{ $temLink ? 'a' : 'div' }}>
+                                    @if(!empty($slide['texto']))
+                                        <div class="dept-destaque-texto">{{ $slide['texto'] }}</div>
+                                    @endif
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 @endif
 
-                {{-- As 3 ultimas publicacoes, uma por vez, girando no carrossel. --}}
                 @if(!empty($noticias))
                     <div class="col-lg-4 md-mt-40">
-                        <div class="dept-noticias-carousel owl-carousel">
+                        <div class="dept-noticias-lista">
                             @foreach($noticias as $item)
-                                <div class="dept-noticia-slide">
-                                    <a href="{{ route('noticias.show', $item['id']) }}" class="dept-noticia-slide-img">
+                                <article class="dept-noticia-mini-card">
+                                    <a href="{{ route('noticias.show', $item['id']) }}" class="dept-noticia-mini-img">
                                         @if(!empty($item['imagem']))
                                             <img src="{{ asset($item['imagem']) }}" alt="{{ $item['titulo'] }}">
                                         @else
@@ -43,7 +61,7 @@
                                             </span>
                                         @endif
                                     </a>
-                                    <div class="dept-noticia-slide-corpo">
+                                    <div class="dept-noticia-mini-corpo">
                                         <span class="back-cates">{{ $item['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
                                         <h3><a href="{{ route('noticias.show', $item['id']) }}">{{ $item['titulo'] }}</a></h3>
                                         <p class="dept-noticia-slide-data mb-0">
@@ -51,7 +69,7 @@
                                             {{ \Illuminate\Support\Carbon::parse($item['data_publicacao'])->format('d/m/Y') }}
                                         </p>
                                     </div>
-                                </div>
+                                </article>
                             @endforeach
                         </div>
                     </div>
@@ -117,6 +135,44 @@
         </div>
     </section>
 
+    @if(!empty($noticiasCards))
+        <section class="dept-home-news-grid py-5">
+            <div class="container">
+                <div class="dept-secao-titulo">
+                    <h2>Noticias recentes</h2>
+                    <span class="dept-secao-linha"></span>
+                    <a href="{{ route('noticias.index') }}" class="back-btn dept-ver-mais">
+                        Ver mais <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    @foreach($noticiasCards as $item)
+                        <div class="col-lg-4 col-md-6">
+                            <article class="noticia-card dept-home-news-card h-100">
+                                <a href="{{ route('noticias.show', $item['id']) }}" class="noticia-card-img">
+                                    @if(!empty($item['imagem']))
+                                        <img src="{{ asset($item['imagem']) }}" alt="{{ $item['titulo'] }}">
+                                    @else
+                                        <span class="noticia-card-img-placeholder dept-cate-{{ $item['tipo'] }}">
+                                            <i class="fa-solid {{ $item['tipo'] === 'edital' ? 'fa-file-lines' : 'fa-newspaper' }}"></i>
+                                        </span>
+                                    @endif
+                                </a>
+                                <div class="dept-home-news-card-body">
+                                    <span class="badge noticia-badge-{{ $item['tipo'] }}">{{ $item['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
+                                    <span class="text-muted small ms-2">{{ \Illuminate\Support\Carbon::parse($item['data_publicacao'])->format('d/m/Y') }}</span>
+                                    <h3><a href="{{ route('noticias.show', $item['id']) }}">{{ $item['titulo'] }}</a></h3>
+                                    <p>{{ \Illuminate\Support\Str::limit($item['resumo'], 110) }}</p>
+                                </div>
+                            </article>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     <section class="back-hero-area back-latest-posts back-whats-posts py-5">
         <div class="container">
             <div class="row align-items-center g-5">
@@ -166,17 +222,17 @@
                 });
             @endif
 
-            @if(!empty($noticias))
-                // Carrossel das ultimas noticias: uma por vez, ao lado da imagem de destaque.
-                $('.dept-noticias-carousel').owlCarousel({
+            @if(!empty($destaqueSlides))
+                $('.dept-destaque-carousel').owlCarousel({
                     items: 1,
-                    loop: {{ count($noticias) > 1 ? 'true' : 'false' }},
-                    autoplay: {{ count($noticias) > 1 ? 'true' : 'false' }},
-                    autoplayTimeout: 6000,
+                    loop: {{ count($destaqueSlides) > 1 ? 'true' : 'false' }},
+                    autoplay: {{ count($destaqueSlides) > 1 ? 'true' : 'false' }},
+                    autoplayTimeout: 5000,
                     autoplayHoverPause: true,
-                    nav: false,
-                    dots: {{ count($noticias) > 1 ? 'true' : 'false' }},
-                    margin: 0
+                    nav: {{ count($destaqueSlides) > 1 ? 'true' : 'false' }},
+                    dots: {{ count($destaqueSlides) > 1 ? 'true' : 'false' }},
+                    margin: 0,
+                    navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>']
                 });
             @endif
         });

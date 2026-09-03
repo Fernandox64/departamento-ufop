@@ -30,7 +30,7 @@ class BackupManager
         $zip = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-        foreach (glob(storage_path('app/private/content/*.json')) as $file) {
+        foreach (glob(ContentStore::directory().'/*.json') as $file) {
             $zip->addFile($file, 'content/'.basename($file));
         }
 
@@ -77,7 +77,7 @@ class BackupManager
 
         self::criarCopiaDeSeguranca();
 
-        self::limparPasta(storage_path('app/private/content'), '*.json');
+        self::limparPasta(ContentStore::directory(), '*.json');
         self::limparPasta(storage_path('app/public/uploads'), '*');
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -106,7 +106,7 @@ class BackupManager
         }
 
         if (str_starts_with($nomeNoZip, 'content/') && str_ends_with($nomeNoZip, '.json')) {
-            return storage_path('app/private/content/'.basename($nomeNoZip));
+            return ContentStore::directory().'/'.basename($nomeNoZip);
         }
 
         if (str_starts_with($nomeNoZip, 'uploads/')) {
@@ -142,7 +142,7 @@ class BackupManager
         $zip = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-        foreach (glob(storage_path('app/private/content/*.json')) as $file) {
+        foreach (glob(ContentStore::directory().'/*.json') as $file) {
             $zip->addFile($file, 'content/'.basename($file));
         }
         foreach (glob(storage_path('app/public/uploads/*')) as $file) {

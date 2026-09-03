@@ -25,7 +25,7 @@ services:
       CLAMAV_PORT: 3310
     volumes:
       # Conteudo editado pela secretaria e imagens enviadas sobrevivem a rebuilds/deploys.
-      - ./storage/content:/var/www/html/storage/app/private/content
+      - ./storage/content:/var/www/html/storage/content
       - ./storage/uploads:/var/www/html/storage/app/public/uploads
       # Copia de seguranca automatica, criada no servidor logo antes de qualquer
       # restauracao de backup (rede extra contra restaurar o arquivo errado por

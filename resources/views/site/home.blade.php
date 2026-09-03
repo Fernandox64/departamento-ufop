@@ -1,78 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-    @if(!empty($noticias))
-        @php
-            // 1a noticia vira o destaque grande; as demais (ate 3) ficam na lista ao lado.
-            $noticiaDestaque = $noticias[0];
-            $noticiasLista = array_slice($noticias, 1, 3);
-        @endphp
-        <section class="back-hero-area back-latest-posts">
-            <div class="container">
-                <div class="dept-secao-titulo">
-                    <h2>Ultimas noticias</h2>
-                    <span class="dept-secao-linha"></span>
-                    <a href="{{ route('noticias.index') }}" class="back-btn">Ver todas</a>
-                </div>
+    <section class="back-hero-area back-latest-posts">
+        <div class="container">
+            <div class="dept-secao-titulo">
+                <h2>Ultimas noticias</h2>
+                <span class="dept-secao-linha"></span>
+                <a href="{{ route('noticias.index') }}" class="back-btn">Ver todas</a>
+            </div>
 
-                <div class="row">
+            <div class="row">
+                {{-- Imagem de destaque: editada em /admin/destaque, independente das noticias. --}}
+                @if(!empty($destaque['imagem']))
                     <div class="col-lg-8">
-                        <ul class="list-unstyled mb-0">
-                            <li>
-                                <div class="image-area dept-destaque @if(empty($noticiaDestaque['imagem'])) dept-destaque-sem-imagem @endif">
-                                    <a href="{{ route('noticias.show', $noticiaDestaque['id']) }}">
-                                        @if(!empty($noticiaDestaque['imagem']))
-                                            <img src="{{ asset($noticiaDestaque['imagem']) }}" alt="{{ $noticiaDestaque['titulo'] }}">
+                        @php $temLink = !empty($destaque['link']); @endphp
+                        <div class="dept-destaque-box">
+                            <{{ $temLink ? 'a' : 'div' }}
+                                @if($temLink) href="{{ $destaque['link'] }}" @endif
+                                class="dept-destaque-img">
+                                <img src="{{ asset($destaque['imagem']) }}"
+                                     alt="{{ $destaque['legenda'] ?: $siteSettings['nome_site'] }}">
+                                @if(!empty($destaque['legenda']))
+                                    <span class="dept-destaque-legenda">{{ $destaque['legenda'] }}</span>
+                                @endif
+                            </{{ $temLink ? 'a' : 'div' }}>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- As 3 ultimas publicacoes, uma por vez, girando no carrossel. --}}
+                @if(!empty($noticias))
+                    <div class="col-lg-4 md-mt-40">
+                        <div class="dept-noticias-carousel owl-carousel">
+                            @foreach($noticias as $item)
+                                <div class="dept-noticia-slide">
+                                    <a href="{{ route('noticias.show', $item['id']) }}" class="dept-noticia-slide-img">
+                                        @if(!empty($item['imagem']))
+                                            <img src="{{ asset($item['imagem']) }}" alt="{{ $item['titulo'] }}">
+                                        @else
+                                            <span class="dept-thumb-vazia dept-cate-{{ $item['tipo'] }}">
+                                                <i class="fa-solid {{ $item['tipo'] === 'edital' ? 'fa-file-lines' : 'fa-newspaper' }}"></i>
+                                            </span>
                                         @endif
                                     </a>
-                                    <div class="back-btm-content">
-                                        <span class="back-cate dept-cate-{{ $noticiaDestaque['tipo'] }}">{{ $noticiaDestaque['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
-                                        <h3><a href="{{ route('noticias.show', $noticiaDestaque['id']) }}">{{ $noticiaDestaque['titulo'] }}</a></h3>
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="back-date">
-                                                <i class="fa-solid fa-clock me-2"></i>
-                                                {{ \Illuminate\Support\Carbon::parse($noticiaDestaque['data_publicacao'])->translatedFormat('d \d\e F \d\e Y') }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="col-lg-4 md-mt-40">
-                        <ul class="back-hero-bottom list-unstyled">
-                            @foreach($noticiasLista as $item)
-                                <li>
-                                    <div class="image-areas">
-                                        <a href="{{ route('noticias.show', $item['id']) }}">
-                                            @if(!empty($item['imagem']))
-                                                <img src="{{ asset($item['imagem']) }}" alt="{{ $item['titulo'] }}">
-                                            @else
-                                                <span class="dept-thumb-vazia dept-cate-{{ $item['tipo'] }}">
-                                                    <i class="fa-solid {{ $item['tipo'] === 'edital' ? 'fa-file-lines' : 'fa-newspaper' }}"></i>
-                                                </span>
-                                            @endif
-                                        </a>
-                                    </div>
-                                    <div class="back-btm-content">
+                                    <div class="dept-noticia-slide-corpo">
                                         <span class="back-cates">{{ $item['tipo'] === 'edital' ? 'Edital' : 'Noticia' }}</span>
                                         <h3><a href="{{ route('noticias.show', $item['id']) }}">{{ $item['titulo'] }}</a></h3>
-                                        <ul class="list-unstyled mb-0">
-                                            <li class="back-date">
-                                                <i class="fa-solid fa-clock me-2"></i>
-                                                {{ \Illuminate\Support\Carbon::parse($item['data_publicacao'])->format('d/m/Y') }}
-                                            </li>
-                                        </ul>
+                                        <p class="dept-noticia-slide-data mb-0">
+                                            <i class="fa-solid fa-clock me-2"></i>
+                                            {{ \Illuminate\Support\Carbon::parse($item['data_publicacao'])->format('d/m/Y') }}
+                                        </p>
                                     </div>
-                                </li>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
-        </section>
-    @endif
+        </div>
+    </section>
 
     @if($mostrarEventos && !empty($eventos))
         <section class="py-5 bg-light">
@@ -163,10 +149,10 @@
     @endif
 @endsection
 
-@if(!empty($carrossel['slides']))
-    @push('scripts')
-        <script>
-            $(function () {
+@push('scripts')
+    <script>
+        $(function () {
+            @if(!empty($carrossel['slides']))
                 $('.dept-carousel').owlCarousel({
                     items: 1,
                     loop: {{ count($carrossel['slides']) > 1 ? 'true' : 'false' }},
@@ -178,7 +164,21 @@
                     margin: 0,
                     navText: ['<i class="fa-solid fa-chevron-left"></i>', '<i class="fa-solid fa-chevron-right"></i>']
                 });
-            });
-        </script>
-    @endpush
-@endif
+            @endif
+
+            @if(!empty($noticias))
+                // Carrossel das ultimas noticias: uma por vez, ao lado da imagem de destaque.
+                $('.dept-noticias-carousel').owlCarousel({
+                    items: 1,
+                    loop: {{ count($noticias) > 1 ? 'true' : 'false' }},
+                    autoplay: {{ count($noticias) > 1 ? 'true' : 'false' }},
+                    autoplayTimeout: 6000,
+                    autoplayHoverPause: true,
+                    nav: false,
+                    dots: {{ count($noticias) > 1 ? 'true' : 'false' }},
+                    margin: 0
+                });
+            @endif
+        });
+    </script>
+@endpush

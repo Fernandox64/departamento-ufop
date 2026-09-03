@@ -49,6 +49,7 @@
                 @endif
                 <a href="{{ route('admin.rodape.edit') }}" class="{{ request()->routeIs('admin.rodape.*') ? 'active' : '' }}">Rodape do site</a>
                 <a href="{{ route('admin.home.edit') }}" class="{{ request()->routeIs('admin.home.*') ? 'active' : '' }}">Pagina inicial</a>
+                <a href="{{ route('admin.destaque.edit') }}" class="{{ request()->routeIs('admin.destaque.*') ? 'active' : '' }}">Imagem de destaque</a>
                 <a href="{{ route('admin.carrossel.edit') }}" class="{{ request()->routeIs('admin.carrossel.*') ? 'active' : '' }}">Carrossel de imagens</a>
                 <a href="{{ route('admin.noticias.index') }}" class="{{ request()->routeIs('admin.noticias.*') ? 'active' : '' }}">Noticias e Editais</a>
                 <a href="{{ route('admin.eventos.index') }}" class="{{ request()->routeIs('admin.eventos.*') ? 'active' : '' }}">Eventos</a>

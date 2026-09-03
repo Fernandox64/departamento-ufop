@@ -198,6 +198,103 @@
     background: linear-gradient(135deg, var(--brand-wine), var(--brand-charcoal));
 }
 
+.back-latest-posts .dept-destaque-box {
+    height: 420px;
+}
+.back-latest-posts .dept-destaque-img {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--brand-charcoal);
+}
+.back-latest-posts .dept-destaque-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(43, 43, 43, 0) 45%, rgba(43, 43, 43, 0.82) 100%);
+    pointer-events: none;
+}
+.back-latest-posts .dept-destaque-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.dept-destaque-legenda {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 22px;
+    z-index: 1;
+    color: #fff;
+    font-size: 1.35rem;
+    line-height: 1.35;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .35);
+}
+
+.dept-noticias-carousel,
+.dept-noticias-carousel .owl-stage-outer,
+.dept-noticias-carousel .owl-stage,
+.dept-noticias-carousel .owl-item {
+    height: 100%;
+}
+.dept-noticia-slide {
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    background: #fff;
+}
+.dept-noticia-slide-img {
+    display: block;
+    height: 235px;
+    background: var(--brand-gray-light);
+}
+.dept-noticia-slide-img img,
+.dept-noticia-slide-img .dept-thumb-vazia {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+.dept-noticia-slide-img img {
+    object-fit: cover;
+    display: block;
+}
+.dept-noticia-slide-corpo {
+    flex: 1 1 auto;
+    padding: 22px;
+}
+.dept-noticia-slide-corpo h3 {
+    font-size: 1.15rem;
+    line-height: 1.35;
+    margin: 12px 0;
+}
+.dept-noticia-slide-corpo h3 a {
+    color: var(--brand-charcoal);
+}
+.dept-noticia-slide-corpo h3 a:hover {
+    color: var(--brand-red-strong);
+}
+.dept-noticia-slide-data {
+    color: var(--brand-gray);
+    font-size: .9rem;
+}
+.dept-noticias-carousel .owl-dots {
+    margin-top: 14px;
+    text-align: center;
+}
+.dept-noticias-carousel .owl-dot span {
+    background: var(--brand-gray-light) !important;
+}
+.dept-noticias-carousel .owl-dot.active span {
+    background: var(--brand-red-strong) !important;
+}
+
 /* Cores da marca por tipo de publicacao, no lugar do azul do tema. Vale tanto
  * para o selo do destaque (.back-cate) quanto para a miniatura redonda da
  * lista lateral (.dept-thumb-vazia) — por isso nao exige outra classe junto.
@@ -338,8 +435,31 @@
     .back-latest-posts .dept-destaque {
         height: 280px;
     }
+    .back-latest-posts .dept-destaque-box,
+    .dept-noticia-slide {
+        min-height: 0;
+        height: auto;
+    }
+    .back-latest-posts .dept-destaque-img {
+        height: 280px;
+    }
+    .dept-noticia-slide-img {
+        height: 210px;
+    }
     .back-latest-posts .back-hero-bottom {
         padding-left: 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .dept-destaque-legenda {
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        font-size: 1.05rem;
+    }
+    .dept-noticia-slide-corpo {
+        padding: 18px;
     }
 }
 

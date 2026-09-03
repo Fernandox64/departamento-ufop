@@ -113,6 +113,19 @@ class ContentDefaults
         ];
     }
 
+    /**
+     * Imagem grande que abre a pagina inicial. Fica em secao propria do painel
+     * (nao sai das noticias), entao a secretaria troca quando quiser.
+     */
+    public static function destaque(): array
+    {
+        return [
+            'imagem' => 'assets/images/latest-news/1.jpg',
+            'legenda' => '',
+            'link' => '',
+        ];
+    }
+
     public static function pessoal(): array
     {
         return [

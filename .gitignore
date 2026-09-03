@@ -21,11 +21,15 @@
 /storage/*.key
 /storage/pail
 
-# Conteudo editado pela secretaria pelo painel admin e imagens enviadas.
-# Ficam fora do git de proposito (sao dados de cada implantacao, nao do template)
-# e persistem via volume Docker - ver docker-compose.yml.
-/storage/content/*
+# Conteudo inicial do site principal.
+# Estes JSONs entram no git para que a versao publicada no GitHub abra com o
+# mesmo conteudo do ambiente local de referencia.
+!/storage/content/
+!/storage/content/*.json
 !/storage/content/.gitkeep
+
+# Imagens enviadas pelo painel continuam fora do git e persistem via volume
+# Docker - ver docker-compose.yml.
 /storage/uploads/*
 !/storage/uploads/.gitkeep
 

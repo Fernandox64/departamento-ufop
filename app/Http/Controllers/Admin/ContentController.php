@@ -18,6 +18,7 @@ class ContentController extends Controller
             ['chave' => 'configuracoes', 'titulo' => 'Configuracoes gerais', 'rota' => 'admin.configuracoes.edit', 'apenas_administrador' => true],
             ['chave' => 'rodape', 'titulo' => 'Rodape do site', 'rota' => 'admin.rodape.edit'],
             ['chave' => 'home', 'titulo' => 'Pagina inicial', 'rota' => 'admin.home.edit'],
+            ['chave' => 'destaque', 'titulo' => 'Imagem de destaque', 'rota' => 'admin.destaque.edit'],
             ['chave' => 'carrossel', 'titulo' => 'Carrossel de imagens', 'rota' => 'admin.carrossel.edit'],
             ['chave' => 'noticias', 'titulo' => 'Noticias e Editais', 'rota' => 'admin.noticias.index'],
             ['chave' => 'eventos', 'titulo' => 'Eventos', 'rota' => 'admin.eventos.index'],
@@ -174,6 +175,36 @@ class ContentController extends Controller
         ContentStore::save('carrossel', ['slides' => $slides]);
 
         return back()->with('status', 'Carrossel atualizado com sucesso.');
+    }
+
+    // ---------------------------------------------------------------
+    // Imagem de destaque da pagina inicial
+    // ---------------------------------------------------------------
+
+    public function destaqueEdit()
+    {
+        $content = ContentStore::get('destaque', ContentDefaults::destaque());
+
+        return view('admin.sections.destaque', compact('content'));
+    }
+
+    public function destaqueUpdate(Request $request)
+    {
+        $data = $request->validate([
+            'legenda' => ['nullable', 'string', 'max:150'],
+            'link' => ['nullable', 'string', 'max:500'],
+            'imagem_arquivo' => ['nullable', 'image', 'max:4096'],
+        ]);
+
+        $atual = ContentStore::get('destaque', ContentDefaults::destaque());
+
+        ContentStore::save('destaque', [
+            'imagem' => ImageUploader::store($request->file('imagem_arquivo'), $atual['imagem']),
+            'legenda' => $data['legenda'] ?? '',
+            'link' => $data['link'] ?? '',
+        ]);
+
+        return back()->with('status', 'Imagem de destaque atualizada com sucesso.');
     }
 
     // ---------------------------------------------------------------

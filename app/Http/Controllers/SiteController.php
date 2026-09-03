@@ -13,14 +13,16 @@ class SiteController extends Controller
     {
         $content = ContentStore::get('home', ContentDefaults::home());
         $carrossel = ContentStore::get('carrossel', ContentDefaults::carrossel());
+        // Imagem grande que abre a home: secao propria do painel, independente
+        // das noticias publicadas.
+        $destaque = ContentStore::get('destaque', ContentDefaults::destaque());
         $mostrarEventos = EventoStore::mostrarMenu();
-        // 4 = 1 noticia em destaque (imagem grande) + 3 na lista ao lado, que e
-        // o que deixa a coluna da direita com altura parecida a do destaque
-        // (ver o bloco "Latest Posts" em site/home.blade.php).
-        $noticias = NoticiaStore::latest(4);
+        // 3 noticias, exibidas uma por vez no carrossel ao lado da imagem de
+        // destaque (ver o bloco "Latest Posts" em site/home.blade.php).
+        $noticias = NoticiaStore::latest(3);
         $eventos = $mostrarEventos ? EventoStore::upcoming(5) : [];
 
-        return view('site.home', compact('content', 'carrossel', 'noticias', 'eventos', 'mostrarEventos'));
+        return view('site.home', compact('content', 'carrossel', 'destaque', 'noticias', 'eventos', 'mostrarEventos'));
     }
 
     public function sobre()

@@ -60,6 +60,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/carrossel', [AdminContentController::class, 'carrosselEdit'])->name('carrossel.edit');
         Route::post('/carrossel', [AdminContentController::class, 'carrosselUpdate'])->name('carrossel.update');
 
+        Route::get('/destaque', [AdminContentController::class, 'destaqueEdit'])->name('destaque.edit');
+        Route::post('/destaque', [AdminContentController::class, 'destaqueUpdate'])->name('destaque.update');
+
         Route::get('/sobre', [AdminContentController::class, 'sobreEdit'])->name('sobre.edit');
         Route::post('/sobre', [AdminContentController::class, 'sobreUpdate'])->name('sobre.update');
 

@@ -130,6 +130,86 @@ class ContentDefaults
                 'descricao' => 'Visual sofisticado para departamento com pesquisa e tecnologia.',
                 'cores' => ['#E5E5E5', '#B50F1B', '#D71920', '#183152', '#F8F8F8', '#343434'],
             ],
+            'canva-divertido-profissional' => [
+                'nome' => 'Canva Divertido Profissional',
+                'descricao' => 'Inspirada em combinacoes com azul forte, amarelo quente e acentos vibrantes.',
+                'cores' => ['#F7C948', '#91A7B3', '#1261A0', '#F26A4F', '#F4FAFF', '#12324A'],
+            ],
+            'canva-historia-arte' => [
+                'nome' => 'Canva Historia da Arte',
+                'descricao' => 'Inspirada em amarelos quentes, azuis ricos e verdes puros.',
+                'cores' => ['#F2C14E', '#88A096', '#1D5C63', '#2E7D32', '#FFF8E7', '#1F3140'],
+            ],
+            'canva-moderno-puro' => [
+                'nome' => 'Canva Moderno Puro',
+                'descricao' => 'Inspirada em azul vivo, laranja intenso, branco e cinzas limpos.',
+                'cores' => ['#FFB703', '#B8C4CC', '#0077B6', '#FB8500', '#F7FAFC', '#123047'],
+            ],
+            'canva-neon-contraste' => [
+                'nome' => 'Canva Neon Contraste',
+                'descricao' => 'Inspirada em preto com roxo, azul e rosa neon.',
+                'cores' => ['#F72585', '#8E9AAF', '#7209B7', '#00B4D8', '#F8F9FA', '#111111'],
+            ],
+            'canva-turquesa-moderno' => [
+                'nome' => 'Canva Turquesa Moderno',
+                'descricao' => 'Inspirada em turquesa com laranja, cinza e menta.',
+                'cores' => ['#F4A261', '#A8DADC', '#2A9D8F', '#E76F51', '#F1FAEE', '#264653'],
+            ],
+            'canva-azul-dourado' => [
+                'nome' => 'Canva Azul Dourado',
+                'descricao' => 'Inspirada em azuis profundos com detalhe dourado elegante.',
+                'cores' => ['#D4AF37', '#A8B2C1', '#12355B', '#E0A800', '#F6F7F9', '#081A2B'],
+            ],
+            'canva-preto-vibrante' => [
+                'nome' => 'Canva Preto Vibrante',
+                'descricao' => 'Inspirada em preto e branco com destaques fortes e modernos.',
+                'cores' => ['#FFD166', '#BFC7D5', '#EF476F', '#06D6A0', '#FFFFFF', '#101014'],
+            ],
+            'canva-azul-turquesa' => [
+                'nome' => 'Canva Azul Turquesa',
+                'descricao' => 'Inspirada em degradacoes de azul e turquesa com frescor digital.',
+                'cores' => ['#80ED99', '#B8D8D8', '#118AB2', '#06D6A0', '#EEF9F9', '#073B4C'],
+            ],
+            'canva-azul-bronze' => [
+                'nome' => 'Canva Azul Bronze',
+                'descricao' => 'Inspirada em azul-marinho, bronze e vermelho vivo.',
+                'cores' => ['#C9974D', '#AAB3BF', '#0B2545', '#D1495B', '#F7F5F0', '#071629'],
+            ],
+            'canva-roxo-limao' => [
+                'nome' => 'Canva Roxo Limao',
+                'descricao' => 'Inspirada em roxo marcante com verde limao e branco.',
+                'cores' => ['#C8FF00', '#D7DEE8', '#5A189A', '#80B918', '#FBFFF2', '#240046'],
+            ],
+            'canva-tropical' => [
+                'nome' => 'Canva Tropical',
+                'descricao' => 'Inspirada em turquesa, roxo, amarelo e toques alaranjados.',
+                'cores' => ['#FFD166', '#90BE6D', '#118AB2', '#EF476F', '#FFFDF2', '#073B4C'],
+            ],
+            'canva-cinza-cereja' => [
+                'nome' => 'Canva Cinza Cereja',
+                'descricao' => 'Inspirada em cinza, grafite, azul-marinho e cereja.',
+                'cores' => ['#C1121F', '#B7BDC6', '#2B2D42', '#780000', '#F5F6F8', '#161A1D'],
+            ],
+            'canva-vintage-dourado' => [
+                'nome' => 'Canva Vintage Dourado',
+                'descricao' => 'Inspirada em dourado, verde, marrom e branco vintage.',
+                'cores' => ['#D6A84F', '#B7A99A', '#386641', '#8B5E34', '#FFF8E8', '#3A2E25'],
+            ],
+            'canva-salmao-menta' => [
+                'nome' => 'Canva Salmao Menta',
+                'descricao' => 'Inspirada em grafite, salmao, menta e tons claros.',
+                'cores' => ['#F4A261', '#B8DED6', '#2F6F73', '#E76F51', '#F6EFE6', '#2B2D2F'],
+            ],
+            'canva-neon-ousado' => [
+                'nome' => 'Canva Neon Ousado',
+                'descricao' => 'Inspirada em verde vibrante, roxo, azul e branco.',
+                'cores' => ['#CCFF00', '#B8B8FF', '#3A0CA3', '#00BBF9', '#FFFFFF', '#111827'],
+            ],
+            'canva-pop-art' => [
+                'nome' => 'Canva Arte Pop',
+                'descricao' => 'Inspirada em rosa forte, amarelo e azul de alto impacto.',
+                'cores' => ['#FFDE59', '#B8C0FF', '#FF2E88', '#2563EB', '#FFFFFF', '#111827'],
+            ],
         ];
     }
 

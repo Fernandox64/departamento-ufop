@@ -41,6 +41,6 @@ WORKDIR /var/www/html
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && mkdir -p storage/content storage/app/private/content storage/app/public/uploads storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+    && mkdir -p public/uploads storage/content storage/app/private/content storage/app/public/uploads storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && php artisan storage:link \
-    && chown -R www-data:www-data storage bootstrap/cache
+    && chown -R www-data:www-data public/uploads storage bootstrap/cache

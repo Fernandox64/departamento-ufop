@@ -5,21 +5,20 @@ namespace App\Support;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ImageUploader
 {
-    /**
-     * Salva a imagem enviada em public/uploads e devolve o caminho publico
-     * (ex.: "uploads/xxx.jpg"). Se nenhum arquivo for enviado,
-     * devolve o valor atual (mantem a imagem ja cadastrada).
-     *
-     * @throws ValidationException se o ClamAV (quando ligado) identificar o
-     *         arquivo como infectado.
-     */
     public static function store(?UploadedFile $file, string $current = ''): string
     {
         if (! $file) {
             return $current;
+        }
+
+        if (! $file->isValid()) {
+            throw ValidationException::withMessages([
+                'arquivo' => 'O upload falhou antes de chegar ao site. Tente novamente com um arquivo menor.',
+            ]);
         }
 
         if (! ClamAvScanner::isSafe($file->getRealPath())) {
@@ -33,16 +32,46 @@ class ImageUploader
         // de imagem/documento com extensao falsa seja salvo com nome enganoso.
         $extensao = $file->extension() ?: $file->getClientOriginalExtension();
         $name = Str::random(20).'.'.$extensao;
-        $directory = public_path('uploads');
 
-        if (! is_dir($directory) && ! mkdir($directory, 0755, true) && ! is_dir($directory)) {
-            throw ValidationException::withMessages([
-                'imagem_arquivo' => 'Nao foi possivel criar a pasta de uploads. Verifique a permissao de public/uploads.',
-            ]);
+        foreach (self::uploadDirectories() as $target) {
+            if (! self::ensureWritableDirectory($target['directory'])) {
+                continue;
+            }
+
+            try {
+                $file->move($target['directory'], $name);
+
+                return $target['public'].'/'.$name;
+            } catch (Throwable) {
+                continue;
+            }
         }
 
-        $file->move($directory, $name);
+        throw ValidationException::withMessages([
+            'arquivo' => 'Nao foi possivel salvar o arquivo. Verifique a permissao das pastas public/uploads e storage/app/public/uploads.',
+        ]);
+    }
 
-        return 'uploads/'.$name;
+    protected static function uploadDirectories(): array
+    {
+        return [
+            [
+                'directory' => public_path('uploads'),
+                'public' => 'uploads',
+            ],
+            [
+                'directory' => storage_path('app/public/uploads'),
+                'public' => 'storage/uploads',
+            ],
+        ];
+    }
+
+    protected static function ensureWritableDirectory(string $directory): bool
+    {
+        if (! is_dir($directory) && ! @mkdir($directory, 0755, true) && ! is_dir($directory)) {
+            return false;
+        }
+
+        return is_writable($directory);
     }
 }

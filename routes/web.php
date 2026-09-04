@@ -36,6 +36,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/tema', [AdminContentController::class, 'temaEdit'])->name('tema.edit');
         Route::post('/tema', [AdminContentController::class, 'temaUpdate'])->name('tema.update');
 
+        Route::get('/menu-principal', [AdminContentController::class, 'menuEdit'])->name('menu.edit');
+        Route::post('/menu-principal', [AdminContentController::class, 'menuUpdate'])->name('menu.update');
+
         // Areas restritas ao nivel "administrador": configuracoes sensiveis, backup/restauracao
         // e gerenciamento dos proprios membros da equipe (ver app/Http/Middleware/EnsureAdminIsAdministrador.php).
         Route::middleware('admin.administrador')->group(function () {

@@ -51,6 +51,7 @@
                     <a href="{{ route('admin.logos.edit') }}" class="{{ request()->routeIs('admin.logos.*') ? 'active' : '' }}">Logos do site</a>
                 @endif
                 <a href="{{ route('admin.tema.edit') }}" class="{{ request()->routeIs('admin.tema.*') ? 'active' : '' }}">Tema e Cores</a>
+                <a href="{{ route('admin.menu.edit') }}" class="{{ request()->routeIs('admin.menu.*') ? 'active' : '' }}">Menu principal</a>
                 <a href="{{ route('admin.rodape.edit') }}" class="{{ request()->routeIs('admin.rodape.*') ? 'active' : '' }}">Rodape do site</a>
                 <a href="{{ route('admin.home.edit') }}" class="{{ request()->routeIs('admin.home.*') ? 'active' : '' }}">Pagina inicial</a>
                 <a href="{{ route('admin.destaque.edit') }}" class="{{ request()->routeIs('admin.destaque.*') ? 'active' : '' }}">Imagens de destaque</a>

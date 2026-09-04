@@ -19,6 +19,7 @@ class ContentController extends Controller
             ['chave' => 'configuracoes', 'titulo' => 'Configuracoes gerais', 'rota' => 'admin.configuracoes.edit', 'apenas_administrador' => true],
             ['chave' => 'logos', 'titulo' => 'Logos do site', 'rota' => 'admin.logos.edit', 'apenas_administrador' => true],
             ['chave' => 'tema', 'titulo' => 'Tema e Cores', 'rota' => 'admin.tema.edit'],
+            ['chave' => 'menu', 'titulo' => 'Menu principal', 'rota' => 'admin.menu.edit'],
             ['chave' => 'rodape', 'titulo' => 'Rodape do site', 'rota' => 'admin.rodape.edit'],
             ['chave' => 'home', 'titulo' => 'Pagina inicial', 'rota' => 'admin.home.edit'],
             ['chave' => 'destaque', 'titulo' => 'Imagens de destaque', 'rota' => 'admin.destaque.edit'],
@@ -73,6 +74,27 @@ class ContentController extends Controller
     // ---------------------------------------------------------------
     // Configuracoes gerais
     // ---------------------------------------------------------------
+
+    public function menuEdit()
+    {
+        $content = ContentStore::get('menu_principal', ContentDefaults::menuPrincipal());
+
+        return view('admin.sections.menu', compact('content'));
+    }
+
+    public function menuUpdate(Request $request)
+    {
+        $abas = array_keys(ContentDefaults::menuPrincipal());
+        $data = [];
+
+        foreach ($abas as $aba) {
+            $data[$aba] = $request->boolean($aba);
+        }
+
+        ContentStore::save('menu_principal', $data);
+
+        return back()->with('status', 'Menu principal atualizado com sucesso.');
+    }
 
     public function logosEdit()
     {
@@ -196,13 +218,21 @@ class ContentController extends Controller
             'hero_subtitulo' => ['nullable', 'string', 'max:255'],
             'sobre_titulo' => ['nullable', 'string', 'max:150'],
             'sobre_texto' => ['nullable', 'string', 'max:1000'],
+            'sobre_imagem_arquivo' => ['nullable', 'image', 'max:4096'],
             'destaques' => ['array'],
             'destaques.*.icone' => ['nullable', 'string', 'max:60'],
             'destaques.*.titulo' => ['nullable', 'string', 'max:100'],
             'destaques.*.texto' => ['nullable', 'string', 'max:255'],
         ]);
 
+        $atual = ContentStore::get('home', ContentDefaults::home());
+        $data['sobre_imagem'] = ImageUploader::store(
+            $request->file('sobre_imagem_arquivo'),
+            $atual['sobre_imagem'] ?? ContentDefaults::home()['sobre_imagem']
+        );
+        $data['mostrar_sobre_home'] = $request->boolean('mostrar_sobre_home');
         $data['destaques'] = $this->removerLinhasVazias($data['destaques'] ?? []);
+        unset($data['sobre_imagem_arquivo']);
 
         ContentStore::save('home', $data);
 

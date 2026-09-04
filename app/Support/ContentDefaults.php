@@ -32,6 +32,21 @@ class ContentDefaults
         ];
     }
 
+    public static function menuPrincipal(): array
+    {
+        return [
+            'inicio' => true,
+            'departamento' => true,
+            'graduacao' => true,
+            'pos_graduacao' => true,
+            'servicos' => true,
+            'noticias' => true,
+            'eventos' => false,
+            'pessoal' => true,
+            'contato' => true,
+        ];
+    }
+
     public static function paletasTema(): array
     {
         return [
@@ -244,6 +259,8 @@ class ContentDefaults
             ],
             'sobre_titulo' => 'Quem somos',
             'sobre_texto' => 'O Departamento Modelo atua para oferecer servicos de qualidade a comunidade, com uma equipe dedicada e comprometida com a transparencia.',
+            'sobre_imagem' => 'assets/images/about.png',
+            'mostrar_sobre_home' => true,
         ];
     }
 

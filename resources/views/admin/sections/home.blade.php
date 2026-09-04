@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="h4 mb-4">Pagina inicial</h1>
 
-    <form method="POST" action="{{ route('admin.home.update') }}">
+    <form method="POST" action="{{ route('admin.home.update') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="row g-3">
@@ -18,6 +18,12 @@
 
             <div class="col-12"><hr></div>
 
+            <div class="col-12">
+                <div class="form-check form-switch">
+                    <input type="checkbox" name="mostrar_sobre_home" value="1" class="form-check-input" id="mostrar_sobre_home" @checked(old('mostrar_sobre_home', $content['mostrar_sobre_home'] ?? true))>
+                    <label class="form-check-label fw-semibold" for="mostrar_sobre_home">Mostrar secao "Quem somos" na pagina inicial</label>
+                </div>
+            </div>
             <div class="col-md-4">
                 <label class="form-label">Titulo da secao "Quem somos"</label>
                 <input type="text" name="sobre_titulo" class="form-control" value="{{ old('sobre_titulo', $content['sobre_titulo']) }}">
@@ -25,6 +31,15 @@
             <div class="col-md-8">
                 <label class="form-label">Texto curto sobre o departamento</label>
                 <textarea name="sobre_texto" class="form-control" rows="2">{{ old('sobre_texto', $content['sobre_texto']) }}</textarea>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Imagem da secao "Quem somos"</label>
+                @if(!empty($content['sobre_imagem']))
+                    <div class="mb-2">
+                        <img src="{{ asset($content['sobre_imagem']) }}" alt="" style="width:100%;max-height:130px;object-fit:cover;" class="rounded">
+                    </div>
+                @endif
+                <input type="file" name="sobre_imagem_arquivo" class="form-control" accept="image/*">
             </div>
         </div>
 

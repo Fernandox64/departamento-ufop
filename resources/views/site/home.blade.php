@@ -173,20 +173,22 @@
         </section>
     @endif
 
-    <section class="back-hero-area back-latest-posts back-whats-posts py-5">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6">
-                    <img src="{{ asset('assets/images/about.png') }}" class="img-fluid rounded" alt="{{ $siteSettings['nome_site'] }}">
-                </div>
-                <div class="col-lg-6">
-                    <div class="back-title"><h2>{{ $content['sobre_titulo'] }}</h2></div>
-                    <p>{{ $content['sobre_texto'] }}</p>
-                    <a href="{{ route('sobre') }}" class="back-btn">Saiba mais</a>
+    @if($content['mostrar_sobre_home'] ?? true)
+        <section class="back-hero-area back-latest-posts back-whats-posts py-5">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <img src="{{ asset($content['sobre_imagem'] ?? 'assets/images/about.png') }}" class="img-fluid rounded" alt="{{ $content['sobre_titulo'] ?? $siteSettings['nome_site'] }}">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="back-title"><h2>{{ $content['sobre_titulo'] }}</h2></div>
+                        <p>{{ $content['sobre_texto'] }}</p>
+                        <a href="{{ route('sobre') }}" class="back-btn">Saiba mais</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     {{-- Carrossel de imagens: fica no fim da pagina, logo acima do rodape. --}}
     @if(!empty($carrossel['slides']))

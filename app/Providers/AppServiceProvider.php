@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('siteThemeKey', $tema['paleta'] ?? ContentDefaults::tema()['paleta']);
             $view->with('siteThemeOptions', array_replace(ContentDefaults::tema(), $tema));
             $view->with('rodape', ContentStore::get('rodape', ContentDefaults::rodape()));
+            $view->with('menuPrincipal', ContentStore::get('menu_principal', ContentDefaults::menuPrincipal()));
             $view->with('menuGraduacao', ContentStore::get('graduacao', ContentDefaults::graduacao()));
             $view->with('menuPosGraduacao', ContentStore::get('pos_graduacao', ContentDefaults::posGraduacao()));
             $view->with('menuEventosVisivel', EventoStore::mostrarMenu());

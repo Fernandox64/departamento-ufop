@@ -21,20 +21,28 @@
 
             <div class="collapse navbar-collapse" id="mainNavCollapse">
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('sobre') }}">O Departamento</a></li>
-                    @if(!empty($menuGraduacao['mostrar_menu']))
+                    @if($menuPrincipal['inicio'] ?? true)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Inicio</a></li>
+                    @endif
+                    @if($menuPrincipal['departamento'] ?? true)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('sobre') }}">O Departamento</a></li>
+                    @endif
+                    @if($menuPrincipal['graduacao'] ?? true)
                         <li class="nav-item"><a class="nav-link" href="{{ route('graduacao') }}">Graduacao</a></li>
                     @endif
-                    @if(!empty($menuPosGraduacao['mostrar_menu']))
+                    @if($menuPrincipal['pos_graduacao'] ?? true)
                         <li class="nav-item"><a class="nav-link" href="{{ route('pos-graduacao') }}">Pos-Graduacao</a></li>
                     @endif
-                    <li class="nav-item"><a class="nav-link" href="{{ route('servicos') }}">Servicos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('noticias.index') }}">Noticias</a></li>
-                    @if($menuEventosVisivel)
+                    @if($menuPrincipal['servicos'] ?? true)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('servicos') }}">Servicos</a></li>
+                    @endif
+                    @if($menuPrincipal['noticias'] ?? true)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('noticias.index') }}">Noticias</a></li>
+                    @endif
+                    @if($menuPrincipal['eventos'] ?? false)
                         <li class="nav-item"><a class="nav-link" href="{{ route('eventos.index') }}">Eventos</a></li>
                     @endif
-                    @if(!empty($menuPessoal['mostrar_menu']))
+                    @if($menuPrincipal['pessoal'] ?? true)
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="menuPessoalDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pessoal</a>
                             <ul class="dropdown-menu" aria-labelledby="menuPessoalDropdown">
@@ -43,7 +51,9 @@
                             </ul>
                         </li>
                     @endif
-                    <li class="nav-item"><a class="nav-link" href="{{ route('contato') }}">Contato</a></li>
+                    @if($menuPrincipal['contato'] ?? true)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('contato') }}">Contato</a></li>
+                    @endif
                 </ul>
 
                 <ul class="navbar-nav ms-lg-auto align-items-lg-center header-icons">

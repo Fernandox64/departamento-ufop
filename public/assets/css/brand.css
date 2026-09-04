@@ -9,6 +9,9 @@
     --brand-charcoal: #2B2B2B;    /* grafite/preto das barras principais do site oficial */
     --brand-gray: #6E6E6E;        /* cinza de apoio (bordas, textos secundarios) */
     --brand-gray-light: #919191;
+    --brand-wine-rgb: 150, 32, 56;
+    --brand-red-strong-rgb: 200, 16, 46;
+    --brand-charcoal-rgb: 43, 43, 43;
 
     /* Bootstrap usa --bs-primary/--bs-primary-rgb em .text-primary, .btn-primary etc. */
     --bs-primary: var(--brand-red-strong);
@@ -82,6 +85,36 @@
 }
 .back-btn:hover {
     background: var(--brand-red-strong);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--brand-wine);
+    --bs-btn-border-color: var(--brand-wine);
+    --bs-btn-hover-bg: var(--brand-red-strong);
+    --bs-btn-hover-border-color: var(--brand-red-strong);
+    --bs-btn-active-bg: var(--brand-red-strong);
+    --bs-btn-active-border-color: var(--brand-red-strong);
+    --bs-btn-disabled-bg: var(--brand-gray-light);
+    --bs-btn-disabled-border-color: var(--brand-gray-light);
+    --bs-btn-focus-shadow-rgb: var(--brand-red-strong-rgb);
+    background-color: var(--bs-btn-bg) !important;
+    border-color: var(--bs-btn-border-color) !important;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+    background-color: var(--bs-btn-hover-bg) !important;
+    border-color: var(--bs-btn-hover-border-color) !important;
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--brand-wine);
+    --bs-btn-border-color: var(--brand-wine);
+    --bs-btn-hover-bg: var(--brand-wine);
+    --bs-btn-hover-border-color: var(--brand-wine);
+    --bs-btn-active-bg: var(--brand-red-strong);
+    --bs-btn-active-border-color: var(--brand-red-strong);
+    --bs-btn-focus-shadow-rgb: var(--brand-red-strong-rgb);
 }
 
 .back-title h2:before {
@@ -238,9 +271,9 @@
 .dept-carousel .owl-nav button.owl-next {
     position: static;
     transform: none;
-    background: rgba(43, 43, 43, 0.55) !important;
+    background: rgba(var(--brand-wine-rgb), 0.86) !important;
     color: #fff !important;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.24);
     width: 42px;
     height: 42px;
     border-radius: 2px;
@@ -262,7 +295,8 @@
 }
 .dept-carousel .owl-nav button.owl-prev:hover,
 .dept-carousel .owl-nav button.owl-next:hover {
-    background: var(--brand-wine) !important;
+    background: var(--brand-red-strong) !important;
+    border-color: rgba(255, 255, 255, 0.38);
 }
 .dept-carousel .owl-dots {
     display: none;
@@ -422,9 +456,9 @@
 .back-latest-posts .dept-destaque-carousel .owl-nav button.owl-next {
     position: static;
     transform: none;
-    background: rgba(43, 43, 43, 0.55) !important;
+    background: rgba(var(--brand-wine-rgb), 0.86) !important;
     color: #fff !important;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.24);
     width: 42px;
     height: 42px;
     border-radius: 2px;
@@ -448,7 +482,8 @@
 }
 .back-latest-posts .dept-destaque-carousel .owl-nav button.owl-prev:hover,
 .back-latest-posts .dept-destaque-carousel .owl-nav button.owl-next:hover {
-    background: var(--brand-wine) !important;
+    background: var(--brand-red-strong) !important;
+    border-color: rgba(255, 255, 255, 0.38);
 }
 .back-latest-posts .dept-destaque-carousel .owl-dots {
     display: none;
@@ -931,6 +966,18 @@
 
 .admin-topbar {
     background: var(--brand-charcoal) !important;
+}
+.admin-card .btn-primary,
+.admin-sidebar + div .btn-primary {
+    background: var(--brand-wine) !important;
+    border-color: var(--brand-wine) !important;
+}
+.admin-card .btn-primary:hover,
+.admin-card .btn-primary:focus,
+.admin-sidebar + div .btn-primary:hover,
+.admin-sidebar + div .btn-primary:focus {
+    background: var(--brand-red-strong) !important;
+    border-color: var(--brand-red-strong) !important;
 }
 .admin-sidebar a.active {
     background: rgba(200, 16, 46, 0.1);

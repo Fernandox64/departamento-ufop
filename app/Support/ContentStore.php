@@ -9,14 +9,36 @@ class ContentStore
         return storage_path('content');
     }
 
-    protected static function path(string $key): string
+    public static function directories(): array
     {
-        return static::directory()."/{$key}.json";
+        return [
+            static::directory(),
+            storage_path('app/private/content'),
+        ];
     }
 
-    protected static function legacyPath(string $key): string
+    public static function files(): array
     {
-        return storage_path("app/private/content/{$key}.json");
+        $files = [];
+
+        foreach (static::directories() as $directory) {
+            foreach (glob($directory.'/*.json') ?: [] as $file) {
+                $name = basename($file);
+                if (! isset($files[$name]) || filemtime($file) > filemtime($files[$name])) {
+                    $files[$name] = $file;
+                }
+            }
+        }
+
+        return array_values($files);
+    }
+
+    protected static function paths(string $key): array
+    {
+        return array_map(
+            fn ($directory) => $directory."/{$key}.json",
+            static::directories()
+        );
     }
 
     /**
@@ -25,16 +47,14 @@ class ContentStore
      */
     public static function get(string $key, array $defaults = []): array
     {
-        $path = static::path($key);
-        $legacyPath = static::legacyPath($key);
+        $paths = array_values(array_filter(static::paths($key), 'is_file'));
+        usort($paths, fn ($a, $b) => filemtime($b) <=> filemtime($a));
 
-        if (is_file($path)) {
-            $saved = json_decode((string) file_get_contents($path), true);
-        } elseif (is_file($legacyPath)) {
-            $saved = json_decode((string) file_get_contents($legacyPath), true);
-        } else {
+        if (empty($paths)) {
             return $defaults;
         }
+
+        $saved = json_decode((string) file_get_contents($paths[0]), true);
 
         if (! is_array($saved)) {
             return $defaults;
@@ -45,19 +65,27 @@ class ContentStore
 
     public static function save(string $key, array $data): void
     {
-        $directory = static::directory();
-        if (! is_dir($directory) && ! mkdir($directory, 0755, true) && ! is_dir($directory)) {
-            throw new \RuntimeException('Nao foi possivel criar a pasta de conteudo do site.');
-        }
-
         $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         if ($json === false) {
             throw new \RuntimeException('Nao foi possivel preparar o conteudo para salvar.');
         }
 
-        $written = file_put_contents(static::path($key), $json, LOCK_EX);
-        if ($written === false) {
-            throw new \RuntimeException('Nao foi possivel salvar o conteudo. Verifique a permissao da pasta storage/content.');
+        $saved = false;
+        foreach (static::directories() as $directory) {
+            if (! is_dir($directory) && ! @mkdir($directory, 0755, true) && ! is_dir($directory)) {
+                continue;
+            }
+
+            if (! is_writable($directory)) {
+                continue;
+            }
+
+            $written = @file_put_contents($directory."/{$key}.json", $json, LOCK_EX);
+            $saved = $saved || $written !== false;
+        }
+
+        if (! $saved) {
+            throw new \RuntimeException('Nao foi possivel salvar o conteudo. Verifique a permissao das pastas storage/content e storage/app/private/content.');
         }
     }
 }

@@ -3,15 +3,14 @@
 namespace App\Support;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class ImageUploader
 {
     /**
-     * Salva a imagem enviada em storage/app/public/uploads e devolve o caminho
-     * publico (ex.: "storage/uploads/xxx.jpg"). Se nenhum arquivo for enviado,
+     * Salva a imagem enviada em public/uploads e devolve o caminho publico
+     * (ex.: "uploads/xxx.jpg"). Se nenhum arquivo for enviado,
      * devolve o valor atual (mantem a imagem ja cadastrada).
      *
      * @throws ValidationException se o ClamAV (quando ligado) identificar o
@@ -34,8 +33,16 @@ class ImageUploader
         // de imagem/documento com extensao falsa seja salvo com nome enganoso.
         $extensao = $file->extension() ?: $file->getClientOriginalExtension();
         $name = Str::random(20).'.'.$extensao;
-        $file->storeAs('uploads', $name, 'public');
+        $directory = public_path('uploads');
 
-        return 'storage/uploads/'.$name;
+        if (! is_dir($directory) && ! mkdir($directory, 0755, true) && ! is_dir($directory)) {
+            throw ValidationException::withMessages([
+                'imagem_arquivo' => 'Nao foi possivel criar a pasta de uploads. Verifique a permissao de public/uploads.',
+            ]);
+        }
+
+        $file->move($directory, $name);
+
+        return 'uploads/'.$name;
     }
 }

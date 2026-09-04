@@ -30,14 +30,12 @@ class BackupManager
         $zip = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-        foreach (glob(ContentStore::directory().'/*.json') as $file) {
+        foreach (ContentStore::files() as $file) {
             $zip->addFile($file, 'content/'.basename($file));
         }
 
-        foreach (glob(storage_path('app/public/uploads/*')) as $file) {
-            if (is_file($file)) {
-                $zip->addFile($file, 'uploads/'.basename($file));
-            }
+        foreach (self::uploadFiles() as $file) {
+            $zip->addFile($file, 'uploads/'.basename($file));
         }
 
         $zip->close();
@@ -79,6 +77,7 @@ class BackupManager
 
         self::limparPasta(ContentStore::directory(), '*.json');
         self::limparPasta(storage_path('app/public/uploads'), '*');
+        self::limparPasta(public_path('uploads'), '*');
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $nome = $zip->getNameIndex($i);
@@ -115,7 +114,7 @@ class BackupManager
                 return null;
             }
 
-            return storage_path('app/public/uploads/'.$base);
+            return public_path('uploads/'.$base);
         }
 
         return null;
@@ -142,15 +141,27 @@ class BackupManager
         $zip = new ZipArchive();
         $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-        foreach (glob(ContentStore::directory().'/*.json') as $file) {
+        foreach (ContentStore::files() as $file) {
             $zip->addFile($file, 'content/'.basename($file));
         }
-        foreach (glob(storage_path('app/public/uploads/*')) as $file) {
-            if (is_file($file)) {
-                $zip->addFile($file, 'uploads/'.basename($file));
-            }
+        foreach (self::uploadFiles() as $file) {
+            $zip->addFile($file, 'uploads/'.basename($file));
         }
 
         $zip->close();
+    }
+
+    protected static function uploadFiles(): array
+    {
+        $files = [];
+        foreach ([public_path('uploads'), storage_path('app/public/uploads')] as $directory) {
+            foreach (glob($directory.'/*') ?: [] as $file) {
+                if (is_file($file)) {
+                    $files[basename($file)] = $file;
+                }
+            }
+        }
+
+        return array_values($files);
     }
 }

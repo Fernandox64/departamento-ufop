@@ -46,6 +46,8 @@
         <div class="row">
             <div class="col-lg-2 admin-sidebar mb-4">
                 <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Painel</a>
+                <a href="{{ route('admin.tutorial') }}" class="{{ request()->routeIs('admin.tutorial') ? 'active' : '' }}">Tutorial</a>
+                <hr>
                 @if(session('admin_nivel') === 'administrador')
                     <a href="{{ route('admin.configuracoes.edit') }}" class="{{ request()->routeIs('admin.configuracoes.*') ? 'active' : '' }}">Configuracoes gerais</a>
                     <a href="{{ route('admin.logos.edit') }}" class="{{ request()->routeIs('admin.logos.*') ? 'active' : '' }}">Logos do site</a>

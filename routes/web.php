@@ -33,6 +33,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['admin.auth', 'admin.audit'])->group(function () {
         Route::get('/', [AdminContentController::class, 'dashboard'])->name('dashboard');
 
+        Route::get('/tutorial', [AdminContentController::class, 'tutorial'])->name('tutorial');
+
         Route::get('/tema', [AdminContentController::class, 'temaEdit'])->name('tema.edit');
         Route::post('/tema', [AdminContentController::class, 'temaUpdate'])->name('tema.update');
 

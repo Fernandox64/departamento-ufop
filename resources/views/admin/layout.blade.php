@@ -18,6 +18,52 @@
         .admin-sidebar a:hover { background: #e9ecef; }
         .repeat-row { border: 1px solid #dee2e6; border-radius: .5rem; padding: 1rem; margin-bottom: 1rem; background: #fff; }
         .admin-card { background: #fff; border-radius: .5rem; padding: 1.5rem; }
+
+        .admin-nav-toggle { display: none; }
+        .admin-sidebar .admin-nav-item { display: flex; align-items: center; gap: .65rem; }
+        .admin-sidebar .admin-nav-icon { flex: 0 0 auto; width: 22px; text-align: center; color: #9aa2ad; }
+        .admin-sidebar .admin-nav-item:hover .admin-nav-icon,
+        .admin-sidebar .admin-nav-item.active .admin-nav-icon { color: var(--brand-red-strong); }
+        .admin-sidebar hr { border-color: #dee2e6; margin: .5rem 0; }
+
+        @media (max-width: 991.98px) {
+            .admin-nav-toggle { display: inline-flex; }
+            #adminSidebarNav.show,
+            #adminSidebarNav.collapsing {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+                gap: .5rem;
+                background: #fff;
+                border-radius: .5rem;
+                padding: .85rem;
+            }
+            .admin-sidebar .admin-nav-item {
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                gap: .35rem;
+                padding: .65rem .25rem;
+                border-radius: .6rem;
+            }
+            .admin-sidebar .admin-nav-icon {
+                width: 38px;
+                height: 38px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                border-radius: 10px;
+                background: rgba(var(--brand-wine-rgb), .08);
+                color: var(--brand-wine);
+                font-size: 1rem;
+            }
+            .admin-sidebar .admin-nav-item.active .admin-nav-icon {
+                background: var(--brand-wine);
+                color: #fff;
+            }
+            .admin-sidebar .admin-nav-label { font-size: .68rem; line-height: 1.15; color: #333; }
+            .admin-sidebar hr { grid-column: 1 / -1; width: 100%; margin: .15rem 0; }
+        }
     </style>
 </head>
 <body>
@@ -25,6 +71,9 @@
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1">Painel administrativo - {{ $siteSettings['nome_site'] }}</span>
             <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-outline-light btn-sm admin-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#adminSidebarNav" aria-expanded="false" aria-controls="adminSidebarNav" aria-label="Abrir menu do painel">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 @if(session('admin_nome'))
                     <span class="text-white-50 small me-2">
                         {{ session('admin_nome') }}
@@ -45,32 +94,23 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-2 admin-sidebar mb-4">
-                <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Painel</a>
-                <a href="{{ route('admin.tutorial') }}" class="{{ request()->routeIs('admin.tutorial') ? 'active' : '' }}">Tutorial</a>
-                <hr>
-                @if(session('admin_nivel') === 'administrador')
-                    <a href="{{ route('admin.configuracoes.edit') }}" class="{{ request()->routeIs('admin.configuracoes.*') ? 'active' : '' }}">Configuracoes gerais</a>
-                    <a href="{{ route('admin.logos.edit') }}" class="{{ request()->routeIs('admin.logos.*') ? 'active' : '' }}">Logos do site</a>
-                @endif
-                <a href="{{ route('admin.tema.edit') }}" class="{{ request()->routeIs('admin.tema.*') ? 'active' : '' }}">Tema e Cores</a>
-                <a href="{{ route('admin.menu.edit') }}" class="{{ request()->routeIs('admin.menu.*') ? 'active' : '' }}">Menu principal</a>
-                <a href="{{ route('admin.rodape.edit') }}" class="{{ request()->routeIs('admin.rodape.*') ? 'active' : '' }}">Rodape do site</a>
-                <a href="{{ route('admin.home.edit') }}" class="{{ request()->routeIs('admin.home.*') ? 'active' : '' }}">Pagina inicial</a>
-                <a href="{{ route('admin.destaque.edit') }}" class="{{ request()->routeIs('admin.destaque.*') ? 'active' : '' }}">Imagens de destaque</a>
-                <a href="{{ route('admin.carrossel.edit') }}" class="{{ request()->routeIs('admin.carrossel.*') ? 'active' : '' }}">Carrossel de imagens</a>
-                <a href="{{ route('admin.noticias.index') }}" class="{{ request()->routeIs('admin.noticias.*') ? 'active' : '' }}">Noticias e Editais</a>
-                <a href="{{ route('admin.eventos.index') }}" class="{{ request()->routeIs('admin.eventos.*') ? 'active' : '' }}">Eventos</a>
-                <a href="{{ route('admin.sobre.edit') }}" class="{{ request()->routeIs('admin.sobre.*') ? 'active' : '' }}">Sobre o departamento</a>
-                <a href="{{ route('admin.servicos.edit') }}" class="{{ request()->routeIs('admin.servicos.*') ? 'active' : '' }}">Servicos</a>
-                <a href="{{ route('admin.graduacao.edit') }}" class="{{ request()->routeIs('admin.graduacao.*') ? 'active' : '' }}">Graduacao</a>
-                <a href="{{ route('admin.pos-graduacao.edit') }}" class="{{ request()->routeIs('admin.pos-graduacao.*') ? 'active' : '' }}">Pos-Graduacao</a>
-                <a href="{{ route('admin.pessoal.edit') }}" class="{{ request()->routeIs('admin.pessoal.*') ? 'active' : '' }}">Pessoal</a>
-                <a href="{{ route('admin.contato.edit') }}" class="{{ request()->routeIs('admin.contato.*') ? 'active' : '' }}">Contato</a>
-                @if(session('admin_nivel') === 'administrador')
-                    <hr>
-                    <a href="{{ route('admin.backup.index') }}" class="{{ request()->routeIs('admin.backup.*') ? 'active' : '' }}">Backup do site</a>
-                    <a href="{{ route('admin.membros.index') }}" class="{{ request()->routeIs('admin.membros.*') ? 'active' : '' }}">Membros da equipe</a>
-                @endif
+                <div class="collapse d-lg-block" id="adminSidebarNav">
+                    <a href="{{ route('admin.dashboard') }}" class="admin-nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <span class="admin-nav-icon"><i class="fa-solid fa-gauge-high"></i></span>
+                        <span class="admin-nav-label">Painel</span>
+                    </a>
+                    @php $administrador = session('admin_nivel') === 'administrador'; @endphp
+                    @foreach(\App\Support\AdminNav::secoes() as $item)
+                        @continue(!empty($item['apenas_administrador']) && ! $administrador)
+                        @if(!empty($item['divisor_antes']))
+                            <hr>
+                        @endif
+                        <a href="{{ route($item['rota']) }}" class="admin-nav-item {{ request()->routeIs($item['padrao']) ? 'active' : '' }}">
+                            <span class="admin-nav-icon"><i class="{{ $item['icone'] }}"></i></span>
+                            <span class="admin-nav-label">{{ $item['titulo_menu'] ?? $item['titulo'] }}</span>
+                        </a>
+                    @endforeach
+                </div>
             </div>
             <div class="col-lg-10">
                 @if(session('status'))

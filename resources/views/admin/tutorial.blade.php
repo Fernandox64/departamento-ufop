@@ -49,7 +49,11 @@
             <h3>Administração</h3>
             <a href="#membros">Membros da equipe</a>
             <a href="#backup">Backup e restauração</a>
-            <a href="#adaptar">Usar em outro departamento/lab</a>
+        </div>
+        <div class="tutorial-toc-group">
+            <h3>Hospedagem institucional</h3>
+            <a href="#duvidas-suporte">Dúvidas e Suporte</a>
+            <a href="#adaptar">Solicitar um site novo</a>
         </div>
         <div class="tutorial-toc-group">
             <h3>Ajuda</h3>
@@ -453,13 +457,135 @@
         </div>
     </div>
 
+    <div class="tutorial-section" id="duvidas-suporte">
+        <h2>Dúvidas e Suporte (hospedagem institucional)</h2>
+        <p class="mb-3">Este site roda dentro do serviço oficial de hospedagem de sites da UFOP.
+        As perguntas abaixo são sobre <strong>solicitar, aprovar e manter</strong> o site no ar —
+        para dúvidas sobre como editar o conteúdo do dia a dia (publicar notícia, trocar cor
+        etc.), use as outras seções deste tutorial.</p>
+
+        <div class="accordion tutorial-accordion" id="accordionSuporte">
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqServico">
+                        O que é o serviço de hospedagem de sites da UFOP?
+                    </button>
+                </h3>
+                <div id="faqServico" class="accordion-collapse collapse" data-bs-parent="#accordionSuporte">
+                    <div class="accordion-body">
+                        O serviço consiste em oferecer espaço para a criação, publicação e
+                        hospedagem de sites institucionais da Universidade — é dentro dele que
+                        este site do departamento/laboratório está hospedado.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqQuem">
+                        Quem pode solicitar a criação de um site institucional?
+                    </button>
+                </h3>
+                <div id="faqQuem" class="accordion-collapse collapse" data-bs-parent="#accordionSuporte">
+                    <div class="accordion-body">
+                        O serviço é disponibilizado para a comunidade acadêmica e administrativa
+                        da UFOP. Todo site deve ter obrigatoriamente um servidor docente ou
+                        técnico-administrativo cadastrado como responsável ("solicitante"), e o
+                        conteúdo deve ter finalidade estritamente acadêmica ou institucional.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqComo">
+                        Como faço para solicitar um site?
+                    </button>
+                </h3>
+                <div id="faqComo" class="accordion-collapse collapse" data-bs-parent="#accordionSuporte">
+                    <div class="accordion-body">
+                        O responsável deve acessar o portal <strong>minhaUFOP</strong>, entrar no
+                        sistema de <strong>Solicitação de Hospedagem de Sites</strong> (no grupo
+                        Serviços), preencher as informações exigidas e aceitar as regras de uso.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqPrazos">
+                        Quais são os prazos de liberação e publicação do conteúdo?
+                    </button>
+                </h3>
+                <div id="faqPrazos" class="accordion-collapse collapse" data-bs-parent="#accordionSuporte">
+                    <div class="accordion-body">
+                        <ul class="mb-0">
+                            <li><strong>Análise da DTI:</strong> até 10 dias úteis após o envio da
+                            solicitação (aprovação, devolução para ajustes ou rejeição
+                            justificada).</li>
+                            <li><strong>Alimentação do site:</strong> até 60 dias após a concessão
+                            do acesso para publicar o conteúdo. Contas sem conteúdo nesse período
+                            podem ser suspensas ou excluídas — vale começar a preencher o site
+                            (Notícias, Sobre, Contato...) assim que o acesso for liberado.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqDominio">
+                        Quais regras devo seguir para escolher o endereço (domínio) do site?
+                    </button>
+                </h3>
+                <div id="faqDominio" class="accordion-collapse collapse" data-bs-parent="#accordionSuporte">
+                    <div class="accordion-body">
+                        <p>O domínio tem o formato <code class="tutorial-code">&lt;nomedosite&gt;.ufop.br</code>
+                        e deve seguir estas normas:</p>
+                        <ul class="mb-0">
+                            <li>Entre 3 e 26 caracteres;</li>
+                            <li>Letras, números e hífens — mas não pode ser composto só por
+                            números e hífens;</li>
+                            <li>Não pode começar nem terminar com hífen ou número;</li>
+                            <li>Não são permitidos termos de baixo calão;</li>
+                            <li>Evite siglas em excesso, para o endereço ficar compreensível.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContato">
+                        Como entrar em contato para tirar dúvidas sobre a hospedagem ou solicitar suporte?
+                    </button>
+                </h3>
+                <div id="faqContato" class="accordion-collapse collapse" data-bs-parent="#accordionSuporte">
+                    <div class="accordion-body">
+                        <p>O atendimento oficial é feito pela Central de Atendimento da DTI:</p>
+                        <ul class="mb-0">
+                            <li>Abertura de chamado no sistema <strong>GLPI</strong>;</li>
+                            <li>E-mail: <strong>atendimento@nti.ufop.br</strong>;</li>
+                            <li>Telefone: <strong>(31) 3559-1415</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="tutorial-section" id="adaptar">
-        <h2>Usando este modelo para outro departamento ou laboratório</h2>
+        <h2>Solicitando um site novo (outro departamento ou laboratório)</h2>
         <p>Como quase tudo é editável pelo painel, o mesmo modelo de site atende qualquer
         departamento, laboratório ou grupo de pesquisa — só muda o conteúdo.</p>
         <ol class="tutorial-steps">
-            <li>A equipe técnica responsável pela implantação copia o projeto para o novo site e
-            ajusta o nome do site e a conta de administrador inicial.</li>
+            <li>O responsável (docente ou técnico-administrativo) solicita a hospedagem pelo
+            <strong>minhaUFOP</strong>, como descrito em
+            <a href="#duvidas-suporte">Dúvidas e Suporte</a>, e aguarda a aprovação da DTI (até
+            10 dias úteis).</li>
+            <li>Depois que o acesso for liberado, a equipe técnica responsável pela implantação
+            configura este mesmo modelo de site para o novo domínio/departamento e ajusta a
+            conta de administrador inicial.</li>
             <li>Assim que o site sobe no ar, quem for cuidar do conteúdo entra em
             <code class="tutorial-code">/admin</code> e preenche, na ordem que preferir:
             Configurações gerais (nome, sigla, logo), Tema e Cores, Logos, Menu principal, e então
@@ -467,6 +593,8 @@
             <li>Não é necessário mexer em nenhum código para o uso básico — a estrutura de seções
             já cobre o que um site institucional típico precisa.</li>
         </ol>
+        <p class="text-muted small mb-0">Lembre-se do prazo de 60 dias para alimentar o site
+        depois da liberação (veja <a href="#duvidas-suporte">Dúvidas e Suporte</a>).</p>
     </div>
 
     <div class="tutorial-section" id="faq">
@@ -492,8 +620,14 @@
 
     <div class="tutorial-section" id="ajuda">
         <h2>Precisa de ajuda?</h2>
-        <p class="mb-0">Se alguma dúvida não foi respondida neste tutorial, entre em contato com
-        quem administra o servidor do site — a equipe técnica responsável pela implantação.</p>
+        <p>Para dúvidas sobre <strong>como editar o conteúdo</strong> do site (publicar notícia,
+        trocar cor, cadastrar evento etc.), reveja as seções deste tutorial — a maioria das
+        dúvidas do dia a dia está respondida ali.</p>
+        <p class="mb-0">Para dúvidas sobre a <strong>hospedagem em si</strong> — solicitar um site
+        novo, prazos, domínio ou problemas de acesso — veja
+        <a href="#duvidas-suporte">Dúvidas e Suporte</a> ou fale direto com a Central de
+        Atendimento da DTI: chamado no <strong>GLPI</strong>, e-mail
+        <strong>atendimento@nti.ufop.br</strong> ou telefone <strong>(31) 3559-1415</strong>.</p>
     </div>
 @endsection
 
@@ -576,6 +710,30 @@
         }
         .tutorial-callout.tip .label { color: var(--brand-wine); }
         .tutorial-callout.warn .label { color: #8a5a00; }
+
+        .tutorial-accordion .accordion-button {
+            font-weight: 600;
+            font-size: .92rem;
+            color: #1c222b;
+        }
+        .tutorial-accordion .accordion-button:not(.collapsed) {
+            color: var(--brand-wine);
+            background: rgba(var(--brand-wine-rgb), .06);
+            box-shadow: inset 0 -1px 0 rgba(var(--brand-wine-rgb), .15);
+        }
+        .tutorial-accordion .accordion-button:focus {
+            box-shadow: 0 0 0 .2rem rgba(var(--brand-wine-rgb), .2);
+        }
+        .tutorial-accordion .accordion-button::after {
+            filter: hue-rotate(-40deg) saturate(1.4);
+        }
+        .tutorial-accordion .accordion-body {
+            font-size: .9rem;
+            color: #465363;
+        }
+        .tutorial-accordion .accordion-body ul { padding-left: 1.15rem; }
+        .tutorial-accordion .accordion-body li + li { margin-top: .35rem; }
+        .tutorial-accordion { margin-bottom: .5rem; }
 
         .tutorial-fields { list-style: none; padding: 0; margin: 1rem 0; }
         .tutorial-fields li {

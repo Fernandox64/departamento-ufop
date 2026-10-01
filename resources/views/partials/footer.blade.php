@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 @php
-                    // Mesma lista e mesmas condicoes do menu principal (partials/header.blade.php).
+                    // Mesma lista e condicoes do menu principal (partials/header.blade.php), exceto Eventos.
                     $linksRapidos = [
                         ['label' => 'Inicio', 'url' => route('home')],
                         ['label' => 'O Departamento', 'url' => route('sobre')],
@@ -34,9 +34,8 @@
                     }
                     $linksRapidos[] = ['label' => 'Servicos', 'url' => route('servicos')];
                     $linksRapidos[] = ['label' => 'Noticias', 'url' => route('noticias.index')];
-                    if (!empty($menuEventosVisivel)) {
-                        $linksRapidos[] = ['label' => 'Eventos', 'url' => route('eventos.index')];
-                    }
+                    // Eventos sempre aparece aqui, mesmo com o item oculto do menu principal.
+                    $linksRapidos[] = ['label' => 'Eventos', 'url' => route('eventos.index')];
                     if (!empty($menuPessoal['mostrar_menu'])) {
                         $linksRapidos[] = ['label' => 'Docentes', 'url' => route('pessoal.docentes')];
                         $linksRapidos[] = ['label' => 'Funcionarios', 'url' => route('pessoal.funcionarios')];

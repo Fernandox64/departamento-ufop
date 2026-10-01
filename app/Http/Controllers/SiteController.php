@@ -16,12 +16,11 @@ class SiteController extends Controller
         // Imagens grandes que abrem a home: secao propria do painel,
         // independente das noticias publicadas.
         $destaque = ContentStore::get('destaque', ContentDefaults::destaque());
-        $mostrarEventos = EventoStore::mostrarMenu();
         $noticias = NoticiaStore::latest(3);
         $noticiasCards = NoticiaStore::latest(6);
-        $eventos = $mostrarEventos ? EventoStore::upcoming(5) : [];
+        $eventos = EventoStore::homeDestaque(3);
 
-        return view('site.home', compact('content', 'carrossel', 'destaque', 'noticias', 'noticiasCards', 'eventos', 'mostrarEventos'));
+        return view('site.home', compact('content', 'carrossel', 'destaque', 'noticias', 'noticiasCards', 'eventos'));
     }
 
     public function sobre()

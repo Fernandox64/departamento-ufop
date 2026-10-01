@@ -15,6 +15,14 @@
             "descricao": "teste",
             "link": null,
             "id": "QH8XQNcy"
+        },
+        {
+            "id": "semana-computacao",
+            "titulo": "Semana de Computacao do Departamento",
+            "data_evento": "2026-11-09",
+            "local": "Auditorio do departamento",
+            "descricao": "Palestras, minicursos e apresentacao de projetos de alunos e professores.",
+            "link": null
         }
     ],
     "mostrar_menu": false

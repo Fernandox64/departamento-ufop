@@ -78,11 +78,11 @@
         </div>
     </section>
 
-    @if($mostrarEventos && !empty($eventos))
-        <section class="py-5 bg-light">
+    @if(!empty($eventos))
+        <section class="py-5">
             <div class="container">
                 <div class="dept-secao-titulo">
-                    <h2>Proximos eventos</h2>
+                    <h2>Eventos</h2>
                     <span class="dept-secao-linha"></span>
                     <a href="{{ route('eventos.index') }}" class="back-btn">Ver todos</a>
                 </div>

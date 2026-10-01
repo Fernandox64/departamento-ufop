@@ -32,6 +32,16 @@ class EventoStore
         return array_slice($futuros, 0, $limit);
     }
 
+    /**
+     * Eventos da home: os proximos; se nao houver nenhum futuro, os mais recentes ja realizados.
+     */
+    public static function homeDestaque(int $limit): array
+    {
+        $proximos = self::upcoming($limit);
+
+        return $proximos ?: array_slice(array_reverse(self::all()), 0, $limit);
+    }
+
     public static function find(string $id): ?array
     {
         foreach (self::all() as $item) {
